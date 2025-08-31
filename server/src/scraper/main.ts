@@ -13,7 +13,6 @@ export const startPuppeteerScraper = async (
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url);
-    //   await page.setViewport({ width: 1080, height: 1024 });
 
     const price = await page.$eval(selector, (val) => val.textContent);
 
@@ -29,7 +28,7 @@ export const startPuppeteerScraper = async (
     );
     return {
       success: false,
-      errorMessage: `Sorry something went wrong try again later.`,
+      errorMessage: `Failed to fetch the price data.`,
     };
   }
 };
@@ -38,12 +37,20 @@ export const startNormalScraper = async (
   url: string,
   selector: string
 ): Promise<ScrapeResult> => {
-  const response = await axios.get(url);
+  try {
+    const response = await axios.get(url);
 
-  const $ = await load(response.data);
+    const $ = await load(response.data);
 
-  const price = $(selector).text();
-  const domain = domainExtract(url);
+    const price = $(selector).text();
+    const domain = domainExtract(url);
 
-  return { price, domain, success: true };
+    return { price, domain, success: true };
+  } catch (error) {
+    console.error(
+      `Error fetching price from ${url}: `,
+      error instanceof Error ? error.message : `Unknown error in server`
+    );
+    return { success: false, errorMessage: `Failed to fetch the price data.` };
+  }
 };

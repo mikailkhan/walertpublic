@@ -1,7 +1,8 @@
 import { createApp } from "./app";
+import { HOST, SERVER_PORT } from "./configs/config";
 
 const app = createApp();
-const PORT = 3000; // REMOVE THIS AFTER .env setup
-app.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
+
+app.listen(SERVER_PORT, HOST, () => {
+  console.log(`Server is running on http://${HOST}:${SERVER_PORT}`);
 });
