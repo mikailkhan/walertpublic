@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { startNormalScraper, startPuppeteerScraper } from "./scraper/main";
+import whatsappRouter from "./routes/whatsapp";
 
 export const createApp = () => {
   const app = express();
@@ -8,7 +9,7 @@ export const createApp = () => {
   app.use(express.urlencoded());
 
   // Routes
-  app.use(`/api/v1/whatsapp`);
+  app.use(`/api/v1/whatsapp`, whatsappRouter);
 
   return app;
 };
