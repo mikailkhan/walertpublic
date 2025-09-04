@@ -4,6 +4,7 @@ export const usersTable = pgTable("users", {
   userId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
   fullName: varchar({ length: 255 }),
   number: varchar({ length: 13 }),
+  scraperLimit: integer().default(2),
 });
 
 export const websiteTable = pgTable("websites", {
@@ -33,4 +34,12 @@ export const productsTable = pgTable("products", {
   price: numeric({ precision: 10, scale: 2 }),
   userId: integer().references(() => usersTable.userId),
   websiteId: text(),
+});
+
+export const messagesTable = pgTable("messages", {
+  messageId: integer().primaryKey().generatedAlwaysAsIdentity({
+    startWith: 1000,
+  }),
+  message: text(),
+  userid: integer().references(() => usersTable.userId),
 });
