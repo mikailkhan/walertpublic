@@ -76,6 +76,7 @@ export const sendTextMessage = async (req: Request, res: Response) => {
 };
 
 // WEBHOOKS
+
 export const getVerification = (req: Request, res: Response) => {
   const {
     "hub.mode": mode,
@@ -92,8 +93,22 @@ export const getVerification = (req: Request, res: Response) => {
 };
 
 export const recieveMessage = (req: Request, res: Response) => {
+  const data = req.body.entry[0].changes[0].value;
+
+  const name = data.contacts[0].profile.name;
+  const from = data.messages[0].from;
+  const message_id = data.messages[0].id;
+  const text = data.messages[0].text.body;
+  const to = data.metadata.display_phone_number;
   const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
+
+  console.log(`name: ${name}`);
+  console.log(`from: ${from}`);
+  console.log(`message_id: ${message_id}`);
+  console.log(`text: ${text}`);
+  console.log(`to: ${to}`);
   console.log(`\n\nWebhook received ${timestamp}\n`);
-  console.log(JSON.stringify(req.body, null, 2));
+
+  // console.log(JSON.stringify(req.body, null, 2));
   res.status(200).end();
 };
