@@ -1,27 +1,34 @@
-import { integer, pgTable, varchar, text, numeric } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  varchar,
+  text,
+  numeric,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
-  userId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
+  userId: integer().primaryKey(), // -> number of the user whatsapp
   fullName: varchar({ length: 255 }),
-  number: varchar({ length: 13 }),
-  scraperLimit: integer().default(2),
+  scraperLimit: integer().default(2).notNull(),
+  createdAt: timestamp().defaultNow(),
 });
 
 export const websiteTable = pgTable("websites", {
   websiteId: integer()
     .primaryKey()
     .generatedAlwaysAsIdentity({ startWith: 1000 }),
-  website: text(),
-  priceSelector: text(),
-  productNameSelector: text(),
+  website: text().notNull(),
+  priceSelector: text().notNull(),
+  productNameSelector: text().notNull(),
 });
 
 export const admin = pgTable("admin", {
   adminId: integer()
     .primaryKey()
     .generatedAlwaysAsIdentity({ startWith: 1000 }),
-  username: varchar({ length: 255 }),
-  password: varchar({ length: 100 }),
+  username: varchar({ length: 255 }).notNull(),
+  password: varchar({ length: 100 }).notNull(),
   email: varchar({ length: 100 }),
 });
 
@@ -36,10 +43,22 @@ export const productsTable = pgTable("products", {
   websiteId: text(),
 });
 
-export const messagesTable = pgTable("messages", {
-  messageId: integer().primaryKey().generatedAlwaysAsIdentity({
+export const messagesReceivedTable = pgTable("messages_received", {
+  receivedMessageId: integer().primaryKey().generatedAlwaysAsIdentity({
     startWith: 1000,
   }),
-  message: text(),
+  receivedText: text().notNull(),
+  recievedAt: timestamp().defaultNow().notNull(),
+  userid: integer()
+    .references(() => usersTable.userId)
+    .notNull(),
+});
+
+export const messagesSentTable = pgTable("message_sent", {
+  sentMessageId: integer()
+    .primaryKey()
+    .generatedAlwaysAsIdentity({ startWith: 1000 }),
+  sentText: text(),
+  sentAt: timestamp().defaultNow(),
   userid: integer().references(() => usersTable.userId),
 });
