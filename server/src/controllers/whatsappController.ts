@@ -1,6 +1,10 @@
 import axios from "axios";
 import { Response, Request } from "express";
-import { WHATSAPP_API_KEY, WHATSAPP_URL } from "../configs/config";
+import {
+  WHATSAPP_API_KEY,
+  WHATSAPP_URL,
+  WHATSAPP_VERIFY_TOKEN,
+} from "../configs/config";
 
 export const sendTemplateMessage = async (req: Request, res: Response) => {
   // data
@@ -69,4 +73,27 @@ export const sendTextMessage = async (req: Request, res: Response) => {
       text: { body: messageText },
     }),
   });
+};
+
+// WEBHOOKS
+export const getVerification = (req: Request, res: Response) => {
+  const {
+    "hub.mode": mode,
+    "hub.challenge": challenge,
+    "hub.verify_token": token,
+  } = req.query;
+
+  if (mode === "subscribe" && token === WHATSAPP_VERIFY_TOKEN) {
+    console.log("WEBHOOK VERIFIED");
+    res.status(200).send(challenge);
+  } else {
+    res.status(403).end();
+  }
+};
+
+export const recieveMessage = (req: Request, res: Response) => {
+  const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
+  console.log(`\n\nWebhook received ${timestamp}\n`);
+  console.log(JSON.stringify(req.body, null, 2));
+  res.status(200).end();
 };
