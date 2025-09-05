@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { usersTable } from "../db/schema";
 
-export const isExistingUser = async ({
+export const isNewUser = async ({
   number,
 }: {
   number: string;
@@ -13,9 +13,9 @@ export const isExistingUser = async ({
     .where(eq(usersTable.number, number));
 
   if (result.length > 0) {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 };
 
