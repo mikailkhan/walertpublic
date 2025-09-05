@@ -8,10 +8,20 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
-  userId: integer().primaryKey(), // -> number of the user whatsapp
+  userId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
   fullName: varchar({ length: 255 }),
-  scraperLimit: integer().default(2).notNull(),
+  number: varchar({ length: 13 }).unique(),
+
   createdAt: timestamp().defaultNow(),
+});
+
+export const scraperLimitTable = pgTable("scraper_limit", {
+  scraperLimitId: integer()
+    .primaryKey()
+    .generatedAlwaysAsIdentity({ startWith: 1000 }),
+  scraperTotalLimit: integer().default(2).notNull(),
+  scraperCurrentLimit: integer().default(0).notNull(),
+  userId: integer().references(() => usersTable.userId),
 });
 
 export const websiteTable = pgTable("websites", {

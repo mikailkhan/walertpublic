@@ -5,6 +5,7 @@ import {
   WHATSAPP_URL,
   WHATSAPP_VERIFY_TOKEN,
 } from "../configs/config";
+import { createNewUser, isExistingUser } from "../models/userModel";
 
 export const sendTemplateMessage = async (req: Request, res: Response) => {
   // data
@@ -56,9 +57,13 @@ export const sendTemplateMessage = async (req: Request, res: Response) => {
   });
 };
 
-export const sendTextMessage = async (req: Request, res: Response) => {
-  const reciever = "923362601002";
-  const messageText = "This is a text message";
+export const sendTextMessage = async ({
+  reciever,
+  messageText,
+}: {
+  reciever: string;
+  messageText: string;
+}) => {
   const response = await axios({
     url: `${WHATSAPP_URL}/messages`,
     method: "post",
@@ -71,6 +76,34 @@ export const sendTextMessage = async (req: Request, res: Response) => {
       to: reciever,
       type: "text",
       text: { body: messageText },
+    }),
+  });
+};
+
+export const sendReplyMessage = async ({
+  reciever,
+  messageText,
+  messageId,
+}: {
+  reciever: string;
+  messageText: string;
+  messageId: number;
+}) => {
+  const response = await axios({
+    url: `${WHATSAPP_URL}/messages`,
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${WHATSAPP_API_KEY}`,
+      "Content-Type": `application/json`,
+    },
+    data: JSON.stringify({
+      messaging_product: "whatsapp",
+      to: reciever,
+      type: "text",
+      text: { body: messageText },
+      context: {
+        message_id: messageId,
+      },
     }),
   });
 };
@@ -92,22 +125,61 @@ export const getVerification = (req: Request, res: Response) => {
   }
 };
 
-export const recieveMessage = (req: Request, res: Response) => {
-  const data = req.body.entry[0].changes[0].value;
+export const recieveMessage = async (req: Request, res: Response) => {
+  // const rawdata = req.body.entry[0].changes[0].value;
 
-  const name = data.contacts[0].profile.name;
-  const from = data.messages[0].from;
-  const message_id = data.messages[0].id;
-  const text = data.messages[0].text.body;
-  const to = data.metadata.display_phone_number;
-  const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
+  // if (rawdata.contacts !== undefined && rawdata.messages !== undefined) {
+  //   const name: string = rawdata.contacts[0].profile.name;
+  //   const userNumber: string = rawdata.messages[0].from;
+  //   const message_id = rawdata.messages[0].id;
+  //   const text = rawdata.messages[0].text.body;
+  //   const to = rawdata.metadata.display_phone_number;
+  //   const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
 
-  console.log(`name: ${name}`);
-  console.log(`from: ${from}`);
-  console.log(`message_id: ${message_id}`);
-  console.log(`text: ${text}`);
-  console.log(`to: ${to}`);
-  console.log(`\n\nWebhook received ${timestamp}\n`);
+  //   if (await isExistingUser({ number: userNumber })) {
+  //     sendTextMessage({ reciever: userNumber, messageText: "Welcome back" });
+  //   } else {
+  //     await createNewUser({ fullName: name, number: userNumber });
+  //     sendTextMessage({
+  //       reciever: userNumber,
+  //       messageText: `Hello ${name}, Welcome to Walert.pk`,
+  //     });
+  //   }
+  // }
+
+  const { entry } = req.body;
+
+  if (!entry || entry.length === 0) {
+    return res.status(400);
+  }
+
+  const changes = entry[0].changes;
+
+  if (!changes || changes.length === 0) {
+    return res.status(400);
+  }
+
+  const messages = changes[0].value.messages ? changes[0].value.messages : null;
+  const name = changes[0].value.contacts[0].profile.name
+    ? changes[0].value.contacts[0].profile.name
+    : null;
+  const chatbotNumber = changes[0].value.metadata.display_phone_number
+    ? changes[0].value.metadata.display_phone_number
+    : null;
+
+  if (messages.length !== 0) {
+    const userNumber = messages[0].from;
+    const message_id = messages[0].id;
+    const text = messages[0].text.body;
+    const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
+
+    console.log(`name: ${name}`);
+    console.log(`from: ${userNumber}`);
+    console.log(`message_id: ${message_id}`);
+    console.log(`text: ${text}`);
+    console.log(`to: ${chatbotNumber}`);
+    console.log(`\n\nWebhook received ${timestamp}\n`);
+  }
 
   // console.log(JSON.stringify(req.body, null, 2));
   res.status(200).end();
