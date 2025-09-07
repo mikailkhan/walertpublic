@@ -10,5 +10,7 @@ export const createApp = () => {
   // Routes
   app.use(`/api/v1/whatsapp`, whatsappRouter);
 
+  // app.use(`/api/v1/mkinfo`, whatsappRouter);
+
   return app;
 };
