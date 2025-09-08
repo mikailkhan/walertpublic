@@ -1,5 +1,7 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import whatsappRouter from "./routes/whatsapp";
+import adminRouter from "./routes/admin";
+import { ne } from "drizzle-orm";
 
 export const createApp = () => {
   const app = express();
@@ -8,9 +10,21 @@ export const createApp = () => {
   app.use(express.urlencoded());
 
   // Routes
-  app.use(`/api/v1/whatsapp`, whatsappRouter);
+  app.use(
+    `/api/v1/whatsapp`,
+    (req: Request, res: Response, next) => {
+      next();
+    },
+    whatsappRouter
+  );
 
-  // app.use(`/api/v1/mkinfo`, whatsappRouter);
+  app.use(
+    `/api/v1/mkinfo`,
+    (req: Request, res: Response, next) => {
+      next();
+    },
+    adminRouter
+  );
 
   return app;
 };

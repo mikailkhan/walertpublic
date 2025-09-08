@@ -1,6 +1,8 @@
 export interface ScrapeResult {
-  price?: string; // change this back to nummber
+  price?: number; // change this back to nummber
   domain?: string;
+  name?: string;
+  module: string;
   success: boolean;
   errorMessage?: string;
 }

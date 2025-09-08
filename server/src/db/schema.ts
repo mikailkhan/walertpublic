@@ -5,13 +5,13 @@ import {
   text,
   numeric,
   timestamp,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
   userId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
   fullName: varchar({ length: 255 }),
   number: varchar({ length: 13 }).unique(),
-
   createdAt: timestamp().defaultNow(),
 });
 
@@ -31,6 +31,7 @@ export const websiteTable = pgTable("websites", {
   website: text().notNull(),
   priceSelector: text().notNull(),
   productNameSelector: text().notNull(),
+  active: boolean().default(true),
 });
 
 export const admin = pgTable("admin", {
