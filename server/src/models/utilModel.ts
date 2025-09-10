@@ -19,6 +19,12 @@ export const isNewUser = async ({
   }
 };
 
+/**
+ * Returns true if user has already hit limit
+ *
+ * @param number
+ * @returns {boolean}
+ */
 export const isTrackerLimitHit = async (number: string) => {
   try {
     const result = await db

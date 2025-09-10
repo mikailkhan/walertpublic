@@ -2,6 +2,9 @@ import { eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { productsTable, scraperLimitTable, usersTable } from "../db/schema";
 import { getSupportedWebsite } from "./adminModel";
+import { isTrackerLimitHit } from "./utilModel";
+import { log } from "console";
+import { config } from "dotenv";
 
 export const createNewUser = async ({
   fullName,
@@ -36,6 +39,30 @@ export const getUser = async (number: string) => {
   }
 };
 
+export const updateCurrentTrackerLimit = async (userId: number | undefined) => {
+  try {
+    if (!userId) {
+      return false;
+    }
+    const tracker = await db
+      .select({ currentLimit: scraperLimitTable.scraperCurrentLimit })
+      .from(scraperLimitTable)
+      .where(eq(scraperLimitTable.userId, userId));
+
+    const updatedCurrentLimit = tracker[0].currentLimit + 1;
+
+    await db
+      .update(scraperLimitTable)
+      .set({ scraperCurrentLimit: updatedCurrentLimit })
+      .where(eq(scraperLimitTable.userId, userId));
+
+    return true;
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : "somethig other");
+    return false;
+  }
+};
+
 export const addProductTracker = async ({
   number,
   website,
@@ -50,6 +77,10 @@ export const addProductTracker = async ({
   originalPrice: number;
 }): Promise<boolean> => {
   try {
+    if (await isTrackerLimitHit(number)) {
+      return false;
+    }
+
     const supportedWebsite = await getSupportedWebsite(website);
     const user = await getUser(number);
 
@@ -57,16 +88,16 @@ export const addProductTracker = async ({
     const websiteId = supportedWebsite?.websiteId;
     const currentPrice = originalPrice;
 
-    await db
-      .insert(productsTable)
-      .values({
-        userId,
-        websiteId,
-        originalPrice,
-        link,
-        productName,
-        currentPrice,
-      });
+    await db.insert(productsTable).values({
+      userId,
+      websiteId,
+      originalPrice,
+      link,
+      productName,
+      currentPrice,
+    });
+
+    await updateCurrentTrackerLimit(userId);
 
     return true;
   } catch (error) {

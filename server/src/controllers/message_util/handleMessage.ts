@@ -60,12 +60,16 @@ export const handleTextMessage = async (
 ): Promise<void> => {
   const text: string = messages.text ? messages.text.body : "";
 
-  handleNewUser({
-    number: messages.from,
-    fullName: name,
-    message_id: messages.id,
-    text,
-  });
+  if (await isNewUser({ number: messages.from })) {
+    await handleNewUser({
+      number: messages.from,
+      fullName: name,
+      message_id: messages.id,
+      text,
+    });
+
+    return;
+  }
 
   if (isMenuRequest(text)) {
     await sendMenuMessage({ reciever: messages.from });
