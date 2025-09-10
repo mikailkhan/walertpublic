@@ -5,8 +5,16 @@ import {
   WHATSAPP_URL,
   WHATSAPP_VERIFY_TOKEN,
 } from "../configs/config";
-import { createNewUser, isNewUser } from "../models/userModel";
+import { addProductTracker, createNewUser } from "../models/userModel";
+import { isNewUser, isTrackerLimitHit } from "../models/utilModel";
 import { Message } from "../types/Message";
+import { isWebsiteSupported } from "../models/utilModel";
+import { domainExtract } from "../scraper/util/util";
+import { startScraper } from "../scraper/main";
+import {
+  getAllSupportedWebsites,
+  getSupportedWebsite,
+} from "../models/adminModel";
 
 export const sendTemplateMessage = async (req: Request, res: Response) => {
   // data
@@ -187,14 +195,29 @@ const sendLimitHitMessage = ({ reciever }: { reciever: string }): void => {
   });
 };
 
-const sendTrackerInitialisedMessage = ({
+const sendTrackerInitialisedMessage = async ({
   reciever,
+  productName,
+  originalPrice,
 }: {
   reciever: string;
-}): void => {
-  sendTextMessage({
+  productName: string;
+  originalPrice: number;
+}) => {
+  await sendTextMessage({
     reciever,
-    messageText: `Your tracker has been initialized and is ready to go! 🚀`,
+    messageText: `*Your tracker has been initialized and is ready to go! 🚀*
+
+- *Product:* ${productName}    
+- *Current Price:* PKR ${originalPrice}
+
+_Walert.pk at your service :)_
+    `,
+  });
+
+  await sendTextMessage({
+    reciever,
+    messageText: `When price drops we will inform you!`,
   });
 };
 
@@ -235,6 +258,109 @@ const isMenuRequest = (text: string): boolean => {
   return text.toLowerCase() === "menu" ? true : false;
 };
 
+const sendListOfSupportedWebsites = async ({
+  reciever,
+  message_id,
+}: {
+  reciever: string;
+  message_id: number;
+}) => {
+  const result = await getAllSupportedWebsites(true); // gets only active = true websites
+
+  // const list = result?.map((val, index) => {
+  //   `[${index + 1}] ${val.website}`;
+  // });
+
+  await sendReplyMessage({
+    reciever: reciever,
+    messageText: `
+    Here is list of supported websites:
+
+    ${result?.map((val, index) => {
+      return `${index + 1}. ${val.website} 
+`.replace(",", "");
+    })}`,
+    messageId: message_id,
+  });
+};
+
+const addTracker = async ({
+  reciever,
+  message_id,
+  url,
+}: {
+  reciever: string;
+  message_id: number;
+  url: string;
+}) => {
+  if (await isTrackerLimitHit(reciever)) {
+    await sendReplyMessage({
+      reciever: reciever,
+      messageText: `Oops! You've reached your product tracker limit. To add a new one, please delete an old tracker first. 
+      Just send us a message with [MENU] to manage your trackers 🙂`,
+      messageId: message_id,
+    });
+    return;
+  }
+
+  await sendReplyMessage({
+    reciever: reciever,
+    messageText: `Thanks for sharing the link! Please hold on while we check if we can support this website.`,
+    messageId: message_id,
+  });
+
+  const website = domainExtract(url);
+  const websiteDetails = await getSupportedWebsite(website);
+
+  if (!(await isWebsiteSupported(website)) || !websiteDetails?.active) {
+    await sendReplyMessage({
+      reciever: reciever,
+      messageText: `Sorry, this website isn't supported in our system yet 🙏`,
+      messageId: message_id,
+    });
+
+    await sendListOfSupportedWebsites({ reciever, message_id });
+    return;
+  }
+
+  const priceSelector = websiteDetails ? websiteDetails?.priceSelector : "";
+  const productNameSelector = websiteDetails
+    ? websiteDetails?.productNameSelector
+    : "";
+
+  const scraper = await startScraper(url, priceSelector, productNameSelector);
+  const productName = scraper.name ? scraper.name : "";
+  const originalPrice = scraper.price ? scraper.price : 0;
+
+  if (productName.length === 0 || originalPrice === 0) {
+    await sendReplyMessage({
+      reciever,
+      messageText: `❌ Oops! sorry something went wrong from our side, please try again later.`,
+      messageId: message_id,
+    });
+
+    return;
+  }
+
+  const tracker = await addProductTracker({
+    number: reciever,
+    website,
+    productName,
+    link: url,
+    originalPrice,
+  });
+
+  if (tracker) {
+    await sendTrackerInitialisedMessage({
+      reciever,
+      productName,
+      originalPrice,
+    });
+  }
+
+  console.log("HERE");
+};
+
 const handleTextMessage = async (
   messages: Message,
   name: string
@@ -250,10 +376,10 @@ const handleTextMessage = async (
     });
 
     if (isURL(text)) {
-      await sendReplyMessage({
+      addTracker({
         reciever: messages.from,
-        messageText: `URL is valid`,
-        messageId: messages.id,
+        message_id: messages.id,
+        url: text,
       });
     }
 
@@ -268,10 +394,10 @@ const handleTextMessage = async (
     }
   } else {
     if (isURL(text)) {
-      await sendReplyMessage({
+      addTracker({
         reciever: messages.from,
-        messageText: `URL is valid`,
-        messageId: messages.id,
+        message_id: messages.id,
+        url: text,
       });
     } else {
       // If invalid url

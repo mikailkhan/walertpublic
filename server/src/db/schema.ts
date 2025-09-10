@@ -3,7 +3,6 @@ import {
   pgTable,
   varchar,
   text,
-  numeric,
   timestamp,
   boolean,
 } from "drizzle-orm/pg-core";
@@ -32,6 +31,7 @@ export const websiteTable = pgTable("websites", {
   priceSelector: text().notNull(),
   productNameSelector: text().notNull(),
   active: boolean().default(true),
+  scraperModule: text(),
 });
 
 export const admin = pgTable("admin", {
@@ -47,11 +47,12 @@ export const productsTable = pgTable("products", {
   productId: integer()
     .primaryKey()
     .generatedAlwaysAsIdentity({ startWith: 1000 }),
-  name: text(),
+  productName: text(),
   link: text(),
-  price: numeric({ precision: 10, scale: 2 }),
+  currentPrice: integer(),
+  originalPrice: integer().notNull(),
   userId: integer().references(() => usersTable.userId),
-  websiteId: text(),
+  websiteId: integer().references(() => websiteTable.websiteId),
 });
 
 export const messagesReceivedTable = pgTable("messages_received", {

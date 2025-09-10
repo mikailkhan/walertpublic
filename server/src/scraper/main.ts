@@ -1,3 +1,4 @@
+import { ScrapeResult } from "../types/ScrapeResult";
 import { startNormalScraper } from "./modules/NormalScraper";
 import { startPuppeteerScraper } from "./modules/PuppeteerScraper";
 
@@ -5,7 +6,7 @@ export const startScraper = async (
   url: string,
   priceSelector: string,
   productNameSelector: string
-) => {
+): Promise<ScrapeResult> => {
   const normalScraperResult = await startNormalScraper(
     url,
     priceSelector,
@@ -28,6 +29,7 @@ export const startScraper = async (
 
   return {
     success: false,
+    module: "none",
     errorMessage:
       "Both modules have encountered errors and could not complete successfully.",
   };
