@@ -2,7 +2,15 @@ import { Request, Response } from "express";
 import { addSupportedWebsite } from "../models/adminModel";
 import { domainExtract } from "../scraper/util/util";
 import { startScraper } from "../scraper/main";
-import { error } from "console";
+
+/**
+ * Adds a website to the database by the admin.
+ * Becuase of policies Only supported websites can be scraped; unsupported sites are ignored.
+ *
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ * @returns {Promise<void>} Sends a response to the client
+ */
 
 export const handleAddSupportedWebsite = async (
   req: Request,
@@ -22,6 +30,7 @@ export const handleAddSupportedWebsite = async (
       });
     }
 
+    // test our url so if error occurs we don't add it to our supported websites tables for tracking
     const testURL = await startScraper(url, priceSelector, productNameSelector);
 
     if (!testURL.success) {

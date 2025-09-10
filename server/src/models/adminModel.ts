@@ -2,6 +2,9 @@ import { db } from "../db/db";
 import { websiteTable } from "../db/schema";
 import { eq } from "drizzle-orm";
 
+/**
+ * Add supported website
+ */
 export const addSupportedWebsite = async ({
   website,
   priceSelector,
@@ -23,6 +26,11 @@ export const addSupportedWebsite = async ({
   return;
 };
 
+/**
+ * Get details of the specific website
+ * @param website
+ * @returns {object} result
+ */
 export const getSupportedWebsite = async (website: string | undefined) => {
   try {
     if (!website) {
@@ -41,6 +49,12 @@ export const getSupportedWebsite = async (website: string | undefined) => {
   }
 };
 
+/**
+ * Get details of all websites according to active status
+ *
+ * @param {boolean} active - true: all active sites, false: all non-active sites
+ * @returns {object} result
+ */
 export const getAllSupportedWebsites = async (active: boolean = false) => {
   try {
     const result = await db
