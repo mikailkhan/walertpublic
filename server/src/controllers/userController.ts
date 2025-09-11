@@ -8,12 +8,11 @@ import { domainExtract } from "../scraper/util/util";
 import { startScraper } from "../scraper/main";
 import { getSupportedWebsite } from "../models/adminModel";
 import {
-  sendLimitHitMessage,
   sendListOfSupportedWebsitesMessage,
-  sendReplyMessage,
   sendTrackerInitialisedMessage,
 } from "./message_util/Templates";
 import { isURL } from "./message_util/util";
+import { sendReplyMessage, sendTextMessage } from "./message_util/SendMessage";
 
 /**
  * This function stores a new tracker in the database, provided the user has not reached their maximum allowed trackers and the target website is supported.
@@ -34,7 +33,10 @@ export const addTracker = async ({
   url: string;
 }) => {
   if (await isTrackerLimitHit(reciever)) {
-    sendLimitHitMessage({ reciever });
+    sendTextMessage({
+      reciever,
+      messageText: `🚦 Oops! You've reached your tracker limit. To start tracking your new product, please remove one of your existing trackers first in menu.`,
+    });
     return;
   }
 

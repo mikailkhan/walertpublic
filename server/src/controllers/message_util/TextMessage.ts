@@ -1,17 +1,8 @@
-import {
-  createNewUser,
-  deleteUser,
-  getAllTrackers,
-} from "../../models/userModel";
 import { isNewUser } from "../../models/utilModel";
 import { Message } from "../../types/Message";
 import { addTracker, handleNewUser } from "../userController";
-import {
-  sendMenuMessage,
-  sendReplyMessage,
-  sendTextMessage,
-  sendTrackerListForDeletion,
-} from "./Templates";
+import { sendReplyMessage } from "./SendMessage";
+import { sendMenuMessage } from "./Templates";
 import { isMenuRequest, isURL } from "./util";
 
 /**

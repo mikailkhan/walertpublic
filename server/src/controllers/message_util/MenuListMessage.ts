@@ -3,16 +3,9 @@ import {
   deleteUser,
   getAllTrackers,
 } from "../../models/userModel";
-import { isNewUser } from "../../models/utilModel";
 import { Message } from "../../types/Message";
-import { addTracker, handleNewUser } from "../userController";
-import {
-  sendMenuMessage,
-  sendReplyMessage,
-  sendTextMessage,
-  sendTrackerListForDeletion,
-} from "./Templates";
-import { isMenuRequest, isURL } from "./util";
+import { sendTextMessage } from "./SendMessage";
+import { sendTrackerListForDeletion } from "./Templates";
 
 export const handleMenuListReply = async ({
   messages,
