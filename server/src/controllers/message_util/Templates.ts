@@ -2,6 +2,7 @@ import axios from "axios";
 import { Response, Request } from "express";
 import { WHATSAPP_API_KEY, WHATSAPP_URL } from "../../configs/config";
 import { getAllSupportedWebsites } from "../../models/adminModel";
+import { ProductType } from "../../db/types";
 
 export const sendTemplateMessage = async (req: Request, res: Response) => {
   // data
@@ -129,7 +130,7 @@ export const sendMenuMessage = async ({ reciever }: { reciever: string }) => {
                 },
                 {
                   id: "get_more_trackers",
-                  title: "4. Get More Trackers",
+                  title: "4. Get More Trackers 🔥",
                   description:
                     "Do you want to increase your profile tracker limit?",
                 },
@@ -139,6 +140,76 @@ export const sendMenuMessage = async ({ reciever }: { reciever: string }) => {
                   description: "Do you want to unsubscribe from our services?",
                 },
               ],
+            },
+          ],
+        },
+      },
+    }),
+  });
+};
+
+export const sendTrackerListForDeletion = async ({
+  reciever,
+  trackers,
+}: {
+  reciever: string;
+  trackers: ProductType[];
+}) => {
+  const formatLink = (link: string | null) => {
+    if (!link) {
+      return;
+    }
+    if (link.length > 66) {
+      // because max length of description is 70
+      return `${link.trim().slice(0, 65)}...`;
+    }
+
+    return link.trim();
+  };
+
+  const formatName = (name: string | null) => {
+    if (!name) {
+      return;
+    }
+    if (name.length > 21) {
+      // because max length of description is 24
+      return `${name.trim().slice(0, 17)}...`;
+    }
+
+    return name.trim();
+  };
+  await axios({
+    url: `${WHATSAPP_URL}/messages`,
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${WHATSAPP_API_KEY}`,
+      "Content-Type": `application/json`,
+    },
+    data: JSON.stringify({
+      messaging_product: "whatsapp",
+      to: reciever,
+      type: "interactive",
+      interactive: {
+        type: "list",
+        header: {
+          type: "text",
+          text: "Tracker List",
+        },
+        body: {
+          text: "Please choose the tracker you want to delete.",
+        },
+        action: {
+          button: "Tap for the options",
+          sections: [
+            {
+              title: "List",
+              rows: trackers.map((val, index) => {
+                return {
+                  id: `${val.productId}`,
+                  title: `${index + 1}. ${formatName(val.productName)}`,
+                  description: `${formatLink(val.link)}`,
+                };
+              }),
             },
           ],
         },
@@ -212,17 +283,6 @@ _Walert.pk at your service :)_
   });
 };
 
-const sendAccountSuccessfulDeletedMessage = ({
-  reciever,
-}: {
-  reciever: string;
-}): void => {
-  sendTextMessage({
-    reciever,
-    messageText: `✅ Your account has been deleted. Thanks for being with us — we'd love to see you again in the future! 💙`,
-  });
-};
-
 const sendTrackerDeletedMessage = ({
   reciever,
 }: {
@@ -243,18 +303,13 @@ export const sendListOfSupportedWebsitesMessage = async ({
 }) => {
   const result = await getAllSupportedWebsites(true); // gets only active = true websites
 
-  // const list = result?.map((val, index) => {
-  //   `[${index + 1}] ${val.website}`;
-  // });
-
   await sendReplyMessage({
     reciever: reciever,
     messageText: `
-    Here is list of supported websites:
-
+Here is list of supported websites 👉 \n
     ${result?.map((val, index) => {
-      return `${index + 1}. ${val.website} 
-`.replace(",", "");
+      return `
+${index + 1}. ${val.website}`;
     })}`,
     messageId: message_id,
   });

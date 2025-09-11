@@ -1,10 +1,9 @@
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { db } from "../db/db";
 import { productsTable, scraperLimitTable, usersTable } from "../db/schema";
 import { getSupportedWebsite } from "./adminModel";
 import { isTrackerLimitHit } from "./utilModel";
-import { log } from "console";
-import { config } from "dotenv";
+import { ProductType } from "../db/types";
 
 export const createNewUser = async ({
   fullName,
@@ -105,5 +104,45 @@ export const addProductTracker = async ({
       error instanceof Error ? error.message : "error in product adding"
     );
     return false;
+  }
+};
+
+export const getAllTrackers = async (number: string) => {
+  try {
+    const result: ProductType[] = await db
+      .select({ ...getTableColumns(productsTable) })
+      .from(productsTable)
+      .innerJoin(usersTable, eq(productsTable.userId, usersTable.userId))
+      .where(eq(usersTable.number, number));
+
+    return result;
+  } catch (error) {
+    const errorMessage = "Error in fetching all trackers from database";
+    console.error(error instanceof Error ? error.message : errorMessage);
+    return;
+  }
+};
+
+export const deleteUser = async (number: string): Promise<boolean> => {
+  try {
+    await db.delete(usersTable).where(eq(usersTable.number, number));
+    return true;
+  } catch (error) {
+    const errorMessage = "Error in deleting the user";
+    console.error(error instanceof Error ? error.message : errorMessage);
+    return false;
+  }
+};
+
+export const deleteTracker = async (productId: number) => {
+  try {
+    await db
+      .delete(productsTable)
+      .where(eq(productsTable.productId, productId));
+    return true;
+  } catch (error) {
+    const errorMessage = "Error in deleting tracker from database";
+    console.error(error instanceof Error ? error.message : errorMessage);
+    return;
   }
 };

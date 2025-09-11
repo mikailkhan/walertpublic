@@ -12,7 +12,7 @@ import {
   sendListOfSupportedWebsitesMessage,
   sendReplyMessage,
   sendTrackerInitialisedMessage,
-} from "./message_util/Messages";
+} from "./message_util/Templates";
 import { isURL } from "./message_util/util";
 
 /**
