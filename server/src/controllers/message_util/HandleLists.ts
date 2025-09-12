@@ -1,12 +1,25 @@
+import { ERROR_TYPE } from "../../configs/errorConfig";
+import { logError } from "../../models/ErrorModel";
+import { logRecievedMessage } from "../../models/MessagesModel";
+import { logMoreTrackerReq } from "../../models/MoreTrackerModel";
 import {
   deleteTracker,
   deleteUser,
   getAllTrackers,
 } from "../../models/userModel";
 import { Message } from "../../types/Message";
-import { sendTextMessage } from "./SendMessage";
-import { sendTrackerListForDeletion } from "./Templates";
+import { sendTextMessage, sendTrackerListForDeletion } from "./SendMessage";
 
+/**
+ * HandleList provides functions that are executed after requesting a list
+ * (e.g., a Menu list or a Tracker deletion list).
+ * Each function contains the logic to process and handle the corresponding request.
+ */
+
+/**
+ * Handles the Menu message list
+ * @param {Message} messages -  Object that contains info regarding the recieved message.
+ */
 export const handleMenuListReply = async ({
   messages,
 }: {
@@ -16,7 +29,14 @@ export const handleMenuListReply = async ({
     if (messages.interactive.type === "list_reply") {
       const listReplyId = messages.interactive.list_reply.id;
       const number = messages.from;
-      // const listReplyTitle = messages.interactive.list_reply.title;
+      const listReplyTitle = messages.interactive.list_reply.title;
+
+      logRecievedMessage({
+        receivedText: listReplyTitle,
+        messageId: messages.id.toString(),
+        recievedFrom: messages.from,
+        type: "list_reply",
+      });
 
       await menuListReply(listReplyId, number);
     }
@@ -28,8 +48,6 @@ const menuListReply = async (listReplyId: string, number: string) => {
     await handleGetAllTrackers(number);
   } else if (listReplyId === "delete_tracker") {
     await handleDeleteTracker(number);
-  } else if (listReplyId === "update_profile_name") {
-    await handleUpdateProfile(number);
   } else if (listReplyId === "get_more_trackers") {
     await handleGetMoreTrackers(number);
   } else if (listReplyId === "delete_profile") {
@@ -56,6 +74,11 @@ const deleteTrackerReply = async (listReplyId: string, number: string) => {
           reciever: number,
           messageText: `Oops! Something went wrong. We couldn't delete the [${productName}] tracker at the moment. Please try again later.`,
         });
+
+        await logError({
+          type: ERROR_TYPE.TRACKER_NOT_DELETED,
+          errorMessage: `User [${val.userId}] req to delete ${val.productId} was failed.`,
+        });
       }
 
       return;
@@ -71,20 +94,20 @@ const handleDeleteTracker = async (number: string) => {
 };
 
 const handleGetMoreTrackers = async (number: string) => {
-  await sendTextMessage({
-    reciever: number,
-    messageText: `You said, we heard. We are working on this functionality to get you more trackers.`,
-  });
-};
+  let messageText: string;
 
-const handleUpdateProfile = async (number: string) => {
+  if ((await logMoreTrackerReq(number)) === true) {
+    messageText = `You said, we heard. We are working on this functionality to get you more trackers.`;
+  } else {
+    messageText = `We've already noted your request for this feature, and our team is working on adding more trackers 🚀 Thanks for your patience while we make it happen!`;
+  }
+
   await sendTextMessage({
     reciever: number,
-    messageText: `*✏️ Could you please share your name so we can update it for you?*
-Please use the format:
-\`name=YourName\`
-For example: name=Khan`,
+    messageText,
   });
+
+  return;
 };
 
 const handleDeleteUser = async (number: string) => {

@@ -1,8 +1,9 @@
 import { Response, Request } from "express";
 import { WHATSAPP_VERIFY_TOKEN } from "../configs/config";
 import { Message } from "../types/Message";
-import { handleMenuListReply } from "./message_util/MenuListMessage";
+import { handleMenuListReply } from "./message_util/HandleLists";
 import { handleTextMessage } from "./message_util/TextMessage";
+import { logRecievedMessage } from "../models/MessagesModel";
 
 /**
  * This function varifies if we got the hook verified before starting recieving messages.

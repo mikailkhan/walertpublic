@@ -1,8 +1,8 @@
+import { logRecievedMessage } from "../../models/MessagesModel";
 import { isNewUser } from "../../models/utilModel";
 import { Message } from "../../types/Message";
 import { addTracker, handleNewUser } from "../userController";
-import { sendReplyMessage } from "./SendMessage";
-import { sendMenuMessage } from "./Templates";
+import { sendMenuMessage, sendReplyMessage } from "./SendMessage";
 import { isMenuRequest, isURL } from "./util";
 
 /**
@@ -30,6 +30,13 @@ export const handleTextMessage = async (
 
     return;
   }
+
+  logRecievedMessage({
+    receivedText: text,
+    messageId: messages.id.toString(),
+    recievedFrom: messages.from,
+    type: "text",
+  });
 
   if (isMenuRequest(text)) {
     await sendMenuMessage({ reciever: messages.from });

@@ -61,12 +61,13 @@ export const productsTable = pgTable("products", {
 
 export const messagesReceivedTable = pgTable("messages_received", {
   receivedMessageId: integer().primaryKey().generatedAlwaysAsIdentity({
-    startWith: 1,
+    startWith: 1000,
   }),
   receivedText: text().notNull(),
   recievedAt: timestamp().defaultNow().notNull(),
   recievedFrom: text(),
-  messageId: integer(),
+  type: text(),
+  messageId: text(),
   userid: integer()
     .references(() => usersTable.userId, { onDelete: "cascade" })
     .notNull(),
@@ -75,10 +76,11 @@ export const messagesReceivedTable = pgTable("messages_received", {
 export const messagesSentTable = pgTable("message_sent", {
   sentMessageId: integer()
     .primaryKey()
-    .generatedAlwaysAsIdentity({ startWith: 1 }),
+    .generatedAlwaysAsIdentity({ startWith: 1000 }),
   sentText: text(),
   sentTo: text(),
   sentAt: timestamp().defaultNow(),
+  type: text(),
   userid: integer().references(() => usersTable.userId, {
     onDelete: "cascade",
   }),
@@ -89,4 +91,12 @@ export const errorsLogTable = pgTable("error_message", {
   type: text().notNull(),
   errorMessage: text().notNull(),
   messageId: text(),
+});
+
+export const getMoreTrackerTable = pgTable("more_trackers_requests", {
+  reqId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
+  userid: integer().references(() => usersTable.userId, {
+    onDelete: "cascade",
+  }),
+  req: boolean().notNull(),
 });
