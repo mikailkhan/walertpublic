@@ -7,6 +7,15 @@ import { sendReplyMessage, sendTextMessage } from "./SendMessage";
  * Avoid reduntant messages.
  */
 
+/**
+ * Handles the event triggered when a user submits a valid URL from a supported site.
+ * After successfully inserting the product into the database, this template is invoked.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.receiver - The phone number or identifier of the person receiving the message.
+ * @param {string} params.productName - The name of the product.
+ * @param {number} params.originalPrice - The original price of the product before any discounts or modifications.
+ */
 export const sendTrackerInitialisedMessage = async ({
   reciever,
   productName,
@@ -33,6 +42,17 @@ _Walert.pk at your service :)_
   });
 };
 
+/**
+ * Sends the list of supported websites to the user.
+ * This function is triggered when the user provides a product URL from an unsupported site.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.reciever - The phone number or identifier of the user receiving the message.
+ * @param {number} params.message_id - The unique identifier of the message associated with the request.
+ *
+ * @returns {Promise<void>} A promise that resolves once the message has been sent.
+ */
+
 export const sendListOfSupportedWebsitesMessage = async ({
   reciever,
   message_id,
@@ -53,6 +73,19 @@ ${index + 1}. ${val.website}`;
     messageId: message_id,
   });
 };
+
+/**
+ * Sends a helper message to the user.
+ * If a `messageId` is provided, it invokes `sendReplyMessage`;
+ * otherwise, it calls `sendTextMessage` with a default help text.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.number - The phone number or identifier of the user receiving the message.
+ * @param {number} [params.messageId] - Optional. The ID of the message to reply to.
+ * If omitted, a standard helper text message will be sent instead.
+ *
+ * @returns {Promise<void>} A promise that resolves once the helper message has been sent.
+ */
 
 export const sendHelperMessage = async ({
   number,

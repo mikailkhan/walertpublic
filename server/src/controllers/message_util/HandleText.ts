@@ -9,12 +9,11 @@ import { sendHelperMessage } from "./Templates";
 import { isMenuRequest, isURL } from "./util";
 
 /**
- * Handle text messages of the user
+ * Handles a text message from user when recieved.
  *
- *
- * @param {object} messages - contains info of the message
- * @param {string} name - name of the user
- * @returns
+ * @param {object} messages - contains info of the message.
+ * @param {string} name - name of the user.
+ * @returns {Promise<void>} - a void promise that is resolved once a specific action takes place.
  */
 
 export const handleTextMessage = async (
@@ -34,6 +33,7 @@ export const handleTextMessage = async (
     return;
   }
 
+  // Logging the recieved message is below isNewUser because to get the user id incase the user is new.
   await logRecievedMessage({
     receivedText: text,
     messageId: messages.id.toString(),
@@ -41,6 +41,7 @@ export const handleTextMessage = async (
     type: "text",
   });
 
+  // Checking what type of text it is and taking action.
   if (isMenuRequest(text)) {
     await sendMenuMessage({ reciever: messages.from });
   } else {
@@ -58,6 +59,7 @@ export const handleTextMessage = async (
         messageText: `❌ Oops! That doesn't look like a valid URL. Please send the correct one 😊 For example: (https://www.example.com/product/macbookpro)`,
         messageId: messages.id,
       });
+
       await sendHelperMessage({ number: messages.from });
 
       await ErrorLogger({

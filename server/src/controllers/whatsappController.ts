@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { WHATSAPP_VERIFY_TOKEN } from "../configs/config";
 import { Message } from "../types/Message";
-import { handleMenuListReply } from "./message_util/HandleLists";
+import { handleListReply } from "./message_util/HandleLists";
 import { handleTextMessage } from "./message_util/HandleText";
 
 /**
@@ -19,7 +19,7 @@ export const getVerification = (req: Request, res: Response) => {
   } = req.query;
 
   if (mode === "subscribe" && token === WHATSAPP_VERIFY_TOKEN) {
-    console.log("WEBHOOK VERIFIED");
+    console.log("✅ WEBHOOK VERIFIED");
     res.status(200).send(challenge);
   } else {
     res.status(403).end();
@@ -54,18 +54,16 @@ export const recieveMessage = async (req: Request, res: Response) => {
   const name: string = changes[0].value.contacts
     ? changes[0].value.contacts[0].profile.name
     : null;
-  const chatbotNumber: string = changes[0].value.metadata.display_phone_number
-    ? changes[0].value.metadata.display_phone_number
-    : null;
+
+  // const chatbotNumber: string = changes[0].value.metadata.display_phone_number
+  //   ? changes[0].value.metadata.display_phone_number
+  //   : null;
 
   if (messages) {
-    const userNumber = messages.from;
-    const message_id = messages.id;
-
     if (messages.type === "text") {
       handleTextMessage(messages, name);
     } else if (messages.type === "interactive") {
-      handleMenuListReply({ messages });
+      handleListReply({ messages });
     }
 
     return res.status(200).end();

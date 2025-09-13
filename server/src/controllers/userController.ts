@@ -43,6 +43,7 @@ export const addTracker = async ({
     return;
   }
 
+  // If tracker limit was not hit send this message
   await sendReplyMessage({
     reciever: reciever,
     messageText: `Thanks for sharing the link! Please hold on while we check if we can support this website.`,
@@ -141,6 +142,7 @@ export const handleNewUser = async ({
 
     await sendHelperMessage({ number });
 
+    // if the first message was a url
     if (isURL(text)) {
       addTracker({
         reciever: number,

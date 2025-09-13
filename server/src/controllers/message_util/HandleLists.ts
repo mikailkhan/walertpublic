@@ -24,7 +24,7 @@ import {
  * Handles the Menu message list
  * @param {Message} messages -  Object that contains info regarding the recieved message.
  */
-export const handleMenuListReply = async ({
+export const handleListReply = async ({
   messages,
 }: {
   messages: Message;
@@ -47,6 +47,19 @@ export const handleMenuListReply = async ({
   }
 };
 
+/**
+ * This function handles each list reply individually.
+ *
+ * At the moment three cases are handled when a user clicks on:
+ *
+ * First case: Reply from menu list.
+ * Second case: Reply from delete user confirmation list which is Yes/No.
+ * Third case: Reply from delete tracker list.
+ *
+ * @param listReplyId - reply id recieved from user after clicking on one of the options.
+ * @param number - user's number.
+ * @returns {Promise<void>} a promise that resolves once individual action is taken.
+ */
 const ListReply = async (listReplyId: string, number: string) => {
   const data = { listReplyId, number };
   if (await handleMainMenu(data)) {
@@ -60,6 +73,54 @@ const ListReply = async (listReplyId: string, number: string) => {
   }
 };
 
+// ########################################
+// Main Handler functions
+// ########################################
+
+/**
+ * Handles a user's response to main menu buttons.
+ * Determines the action to take based on the option selected by the user.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.listReplyId - The reply ID received from the user after clicking one of the menu options.
+ * @param {string} params.number - The phone number or identifier of the user.
+ *
+ * @returns {Promise<boolean>} A promise that resolves to a boolean indicating whether the response was successfully handled.
+ */
+const handleMainMenu = async ({
+  listReplyId,
+  number,
+}: {
+  listReplyId: string;
+  number: string;
+}): Promise<boolean> => {
+  if (listReplyId === "get_all_trackers") {
+    await handleGetAllTrackers(number);
+    return true;
+  } else if (listReplyId === "delete_tracker") {
+    await handleDeleteTracker(number);
+    return true;
+  } else if (listReplyId === "get_more_trackers") {
+    await handleGetMoreTrackers(number);
+    return true;
+  } else if (listReplyId === "delete_profile") {
+    await sendDeleteConfrimMessage({ reciever: number });
+    return true;
+  } else {
+    return false;
+  }
+};
+
+/**
+ * Handles a user's response to Delete Confirmation [yes/no] buttons.
+ * Determines the action to take based on the option selected by the user.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.listReplyId - The reply ID received from the user after clicking one of the menu options.
+ * @param {string} params.number - The phone number or identifier of the user.
+ *
+ * @returns {Promise<boolean>} A promise that resolves to a boolean indicating whether the response was successfully handled.
+ */
 const handleDeleteUserConfirmation = async ({
   listReplyId,
   number,
@@ -86,30 +147,16 @@ const handleDeleteUserConfirmation = async ({
   }
 };
 
-const handleMainMenu = async ({
-  listReplyId,
-  number,
-}: {
-  listReplyId: string;
-  number: string;
-}): Promise<boolean> => {
-  if (listReplyId === "get_all_trackers") {
-    await handleGetAllTrackers(number);
-    return true;
-  } else if (listReplyId === "delete_tracker") {
-    await handleDeleteTracker(number);
-    return true;
-  } else if (listReplyId === "get_more_trackers") {
-    await handleGetMoreTrackers(number);
-    return true;
-  } else if (listReplyId === "delete_profile") {
-    await sendDeleteConfrimMessage({ reciever: number });
-    return true;
-  } else {
-    return false;
-  }
-};
-
+/**
+ * Handles a user's response to delete tracker lists buttons.
+ * Determines the action to take based on the option selected by the user.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.listReplyId - The reply ID received from the user after clicking one of the menu options.
+ * @param {string} params.number - The phone number or identifier of the user.
+ *
+ * @returns {Promise<boolean>} A promise that resolves to a boolean indicating whether the response was successfully handled.
+ */
 const handleDeleteTrackerReply = async ({
   listReplyId,
   number,
@@ -147,6 +194,18 @@ const handleDeleteTrackerReply = async ({
   return false;
 };
 
+// ########################################
+// Helper functions for main handlers.
+// ########################################
+
+/**
+ * Sends a tracker list to the user so they can select which tracker to delete.
+ * This function is used internally by `handleMainMenu`.
+ *
+ * @param {string} number - The phone number or identifier of the user.
+ *
+ * @returns {Promise<void>} A promise that resolves once the tracker list has been sent.
+ */
 const handleDeleteTracker = async (number: string) => {
   const trackers = await getAllTrackers(number);
   if (trackers) {
@@ -154,6 +213,14 @@ const handleDeleteTracker = async (number: string) => {
   }
 };
 
+/**
+ * Logs a request from a user who wants to increase their tracker limit.
+ * Also sends a confirmation message to indicate that the request has been received.
+ *
+ * @param {string} number - The phone number or identifier of the user.
+ *
+ * @returns {Promise<void>} A promise that resolves once the request has been logged and the confirmation message has been sent.
+ */
 const handleGetMoreTrackers = async (number: string) => {
   let messageText: string;
 
@@ -171,6 +238,14 @@ const handleGetMoreTrackers = async (number: string) => {
   return;
 };
 
+/**
+ * Sends a text message containing a list of active trackers the user has set.
+ * Triggered when the user selects **Get All Trackers** from the main menu.
+ *
+ * @param {string} number - The phone number or identifier of the user.
+ *
+ * @returns {Promise<void>} A promise that resolves once the list of active trackers has been sent.
+ */
 const handleGetAllTrackers = async (number: string) => {
   const trackersList = await getAllTrackers(number);
 

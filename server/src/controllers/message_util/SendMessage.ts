@@ -4,7 +4,6 @@ import { logSentMessages } from "../../models/MessagesModel";
 import { ERROR_TYPE } from "../../configs/errorConfig";
 import { ProductType } from "../../db/types";
 import { ErrorLogger } from "../../util/ErrorLogger";
-import { title } from "process";
 
 // ###############################
 // General Send Messages Functions
@@ -88,6 +87,16 @@ export const sendTemplateMessage = async ({
   }
 };
 
+/**
+ * Sends a plain text message to the user.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.reciever - The phone number or identifier of the user receiving the message.
+ * @param {string} params.messageText - The text content of the message to be sent.
+ *
+ * @returns {Promise<void>} A promise that resolves once the message has been sent.
+ */
+
 export const sendTextMessage = async ({
   reciever,
   messageText,
@@ -125,6 +134,16 @@ export const sendTextMessage = async ({
     });
   }
 };
+
+/**
+ * Sends a reply text message to the user.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.reciever - The phone number or identifier of the user receiving the message.
+ * @param {string} params.messageText - The text content of the message to be sent.
+ * @param {string} params.messageId - The reference of the message to be replied.
+ * @returns {Promise<void>} A promise that resolves once the message has been sent.
+ */
 
 export const sendReplyMessage = async ({
   reciever,
@@ -174,6 +193,15 @@ export const sendReplyMessage = async ({
 // Specific cases Send messages.
 // ###############################
 
+/**
+ * Sends a menu message to the user.
+ * Typically used to provide quick action options or navigation choices.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.reciever - The phone number or identifier of the user receiving the menu message.
+ *
+ * @returns {Promise<void>} A promise that resolves once the menu message has been sent.
+ */
 export const sendMenuMessage = async ({ reciever }: { reciever: string }) => {
   try {
     await axios({
@@ -256,6 +284,15 @@ export const sendMenuMessage = async ({ reciever }: { reciever: string }) => {
   }
 };
 
+/**
+ * Sends a list of trackers that user would like to delete.
+ *
+ * @param {Object} params - The parameter object.
+ * @param {string} params.reciever - The phone number or identifier of the user receiving the menu message.
+ * @param {ProductType[]} params.trackers - The trackers list fetched from the database.
+ *
+ * @returns {Promise<void>} A promise that resolves once the menu message has been sent.
+ */
 export const sendTrackerListForDeletion = async ({
   reciever,
   trackers,
@@ -341,6 +378,14 @@ export const sendTrackerListForDeletion = async ({
   }
 };
 
+/**
+ * Send a confirmation [yes/no] list to the user before deletion of the user's account.
+ *
+ * @param {object} params - the parameter object
+ * @param {string} params.reciever - The phone number or identifier of the user receiving the menu message.
+ *
+ * @returns {Promise<void>} returns a promise that resolves once the message is sent.
+ */
 export const sendDeleteConfrimMessage = async ({
   reciever,
 }: {

@@ -1,13 +1,16 @@
 import express, { Request, Response } from "express";
 import whatsappRouter from "./routes/whatsapp";
 import adminRouter from "./routes/admin";
-import { ne } from "drizzle-orm";
+import { testDBConnection } from "./db/db";
 
 export const createApp = () => {
   const app = express();
 
   app.use(express.json());
   app.use(express.urlencoded());
+
+  // Check DB connection
+  testDBConnection();
 
   // Routes
   app.use(
