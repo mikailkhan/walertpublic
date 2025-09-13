@@ -20,7 +20,11 @@ export const createNewUser = async ({
 
     await db.insert(scraperLimitTable).values({ userId: user[0].userId });
   } catch (error) {
-    console.error(error instanceof Error ? error.message : "somethig other");
+    console.error(
+      error instanceof Error
+        ? `Error in creating new user: ${error.message}`
+        : "Error in creating new user"
+    );
   }
 };
 
@@ -33,12 +37,19 @@ export const getUser = async (number: string) => {
 
     return user[0];
   } catch (error) {
-    console.error(error instanceof Error ? error.message : "somethig other");
+    console.error(
+      error instanceof Error
+        ? `Error in getting user: ${error.message}`
+        : "Error in getting user"
+    );
     return;
   }
 };
 
-export const updateCurrentTrackerLimit = async (userId: number | undefined) => {
+export const updateCurrentTrackerLimit = async (
+  userId: number | undefined,
+  add: boolean = true
+) => {
   try {
     if (!userId) {
       return false;
@@ -48,7 +59,15 @@ export const updateCurrentTrackerLimit = async (userId: number | undefined) => {
       .from(scraperLimitTable)
       .where(eq(scraperLimitTable.userId, userId));
 
-    const updatedCurrentLimit = tracker[0].currentLimit + 1;
+    let updatedCurrentLimit: number = tracker[0].currentLimit;
+
+    if (add) {
+      updatedCurrentLimit += 1;
+    } else {
+      if (tracker[0].currentLimit > 0) {
+        updatedCurrentLimit -= 1;
+      }
+    }
 
     await db
       .update(scraperLimitTable)
@@ -57,7 +76,11 @@ export const updateCurrentTrackerLimit = async (userId: number | undefined) => {
 
     return true;
   } catch (error) {
-    console.error(error instanceof Error ? error.message : "somethig other");
+    console.error(
+      error instanceof Error
+        ? `Error in updating current tracker: ${error.message}`
+        : "Error in updating current tracker"
+    );
     return false;
   }
 };
@@ -101,7 +124,9 @@ export const addProductTracker = async ({
     return true;
   } catch (error) {
     console.error(
-      error instanceof Error ? error.message : "error in product adding"
+      error instanceof Error
+        ? `Error in adding product: ${error.message}`
+        : "error in adding product"
     );
     return false;
   }
@@ -118,7 +143,9 @@ export const getAllTrackers = async (number: string) => {
     return result;
   } catch (error) {
     const errorMessage = "Error in fetching all trackers from database";
-    console.error(error instanceof Error ? error.message : errorMessage);
+    console.error(
+      error instanceof Error ? `${errorMessage}: error.message` : errorMessage
+    );
     return;
   }
 };
@@ -129,16 +156,24 @@ export const deleteUser = async (number: string): Promise<boolean> => {
     return true;
   } catch (error) {
     const errorMessage = "Error in deleting the user";
-    console.error(error instanceof Error ? error.message : errorMessage);
+    console.error(
+      error instanceof Error
+        ? `Error in DeleteUser: ${error.message}`
+        : errorMessage
+    );
     return false;
   }
 };
 
-export const deleteTracker = async (productId: number) => {
+export const deleteTracker = async (productId: number, number: string) => {
   try {
+    const user = await getUser(number);
+
     await db
       .delete(productsTable)
       .where(eq(productsTable.productId, productId));
+
+    await updateCurrentTrackerLimit(user?.userId, false);
     return true;
   } catch (error) {
     const errorMessage = "Error in deleting tracker from database";

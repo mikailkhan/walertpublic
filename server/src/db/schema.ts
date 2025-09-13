@@ -89,7 +89,8 @@ export const messagesSentTable = pgTable("message_sent", {
 export const errorsLogTable = pgTable("error_message", {
   errorId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
   type: text().notNull(),
-  errorMessage: text().notNull(),
+  officialErrorMessage: text(),
+  customErrorMessage: text(),
   messageId: text(),
 });
 

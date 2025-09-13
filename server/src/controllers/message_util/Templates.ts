@@ -1,9 +1,5 @@
-import axios from "axios";
-import { WHATSAPP_API_KEY, WHATSAPP_URL } from "../../configs/config";
 import { getAllSupportedWebsites } from "../../models/adminModel";
-import { ProductType } from "../../db/types";
 import { sendReplyMessage, sendTextMessage } from "./SendMessage";
-import { logSentMessages } from "../../models/MessagesModel";
 
 /**
  *
@@ -56,4 +52,25 @@ ${index + 1}. ${val.website}`;
     })}`,
     messageId: message_id,
   });
+};
+
+export const sendHelperMessage = async ({
+  number,
+  messageId,
+}: {
+  number: string;
+  messageId?: number;
+}) => {
+  if (messageId) {
+    await sendReplyMessage({
+      reciever: number,
+      messageText: `Please provide a product link 🔍 to track, or type \`MENU\` 🏠 for options.`,
+      messageId,
+    });
+  } else {
+    await sendTextMessage({
+      reciever: number,
+      messageText: `Please provide a product link 🔍 to track, or type \`MENU\` 🏠 for options.`,
+    });
+  }
 };

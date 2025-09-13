@@ -1,8 +1,11 @@
+import { ERROR_TYPE } from "../../configs/errorConfig";
 import { logRecievedMessage } from "../../models/MessagesModel";
 import { isNewUser } from "../../models/utilModel";
 import { Message } from "../../types/Message";
+import { ErrorLogger } from "../../util/ErrorLogger";
 import { addTracker, handleNewUser } from "../userController";
 import { sendMenuMessage, sendReplyMessage } from "./SendMessage";
+import { sendHelperMessage } from "./Templates";
 import { isMenuRequest, isURL } from "./util";
 
 /**
@@ -31,7 +34,7 @@ export const handleTextMessage = async (
     return;
   }
 
-  logRecievedMessage({
+  await logRecievedMessage({
     receivedText: text,
     messageId: messages.id.toString(),
     recievedFrom: messages.from,
@@ -54,6 +57,13 @@ export const handleTextMessage = async (
         reciever: messages.from,
         messageText: `❌ Oops! That doesn't look like a valid URL. Please send the correct one 😊 For example: (https://www.example.com/product/macbookpro)`,
         messageId: messages.id,
+      });
+      await sendHelperMessage({ number: messages.from });
+
+      await ErrorLogger({
+        type: ERROR_TYPE.INVALID_REQUEST,
+        messageId: messages.id.toString(),
+        customErrorMessage: `Recieved Invalid request (${text}) from ${messages.from}`,
       });
     }
   }

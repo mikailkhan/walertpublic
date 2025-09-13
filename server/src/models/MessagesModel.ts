@@ -33,7 +33,7 @@ export const logRecievedMessage = async ({
   } catch (error) {
     console.error(
       error instanceof Error
-        ? error.message
+        ? `Error in logging Recieved message: ${error.message}`
         : "Error in logging recieved message"
     );
     return;
@@ -59,11 +59,13 @@ export const logSentMessages = async ({
       sentText,
       sentTo,
       type,
-      userid: user[0].userId,
+      userid: user[0]?.userId,
     });
   } catch (error) {
     console.error(
-      error instanceof Error ? error.message : "Error in logging sent message"
+      error instanceof Error
+        ? `Error in logging sent message: ${error.message}`
+        : "Error in logging sent message"
     );
     return;
   }

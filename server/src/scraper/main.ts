@@ -1,4 +1,7 @@
+import { ERROR_TYPE } from "../configs/errorConfig";
+import { logError } from "../models/ErrorModel";
 import { ScrapeResult } from "../types/ScrapeResult";
+import { ErrorLogger } from "../util/ErrorLogger";
 import { startNormalScraper } from "./modules/NormalScraper";
 import { startPuppeteerScraper } from "./modules/PuppeteerScraper";
 
@@ -28,30 +31,46 @@ export const startScraper = async (
   priceSelector: string,
   productNameSelector: string
 ): Promise<ScrapeResult> => {
-  const normalScraperResult = await startNormalScraper(
-    url,
-    priceSelector,
-    productNameSelector
-  );
+  try {
+    const normalScraperResult = await startNormalScraper(
+      url,
+      priceSelector,
+      productNameSelector
+    );
 
-  if (normalScraperResult.success) {
-    return normalScraperResult;
+    if (normalScraperResult.success) {
+      return normalScraperResult;
+    }
+
+    const puppeteerScraperResult = await startPuppeteerScraper(
+      url,
+      priceSelector,
+      productNameSelector
+    );
+
+    if (puppeteerScraperResult.success) {
+      return puppeteerScraperResult;
+    }
+
+    return {
+      success: false,
+      module: "none",
+      errorMessage:
+        "Both modules have encountered errors and could not complete successfully.",
+    };
+  } catch (error) {
+    const customErrorMessage = `Error in scraping ${url}, with priceSelector: ${priceSelector}, and ${productNameSelector}`;
+
+    await ErrorLogger({
+      error,
+      type: ERROR_TYPE.SCRAPER_FAILED,
+      customErrorMessage,
+    });
+
+    return {
+      success: false,
+      module: "none",
+      errorMessage: customErrorMessage,
+    };
   }
-
-  const puppeteerScraperResult = await startPuppeteerScraper(
-    url,
-    priceSelector,
-    productNameSelector
-  );
-
-  if (puppeteerScraperResult.success) {
-    return puppeteerScraperResult;
-  }
-
-  return {
-    success: false,
-    module: "none",
-    errorMessage:
-      "Both modules have encountered errors and could not complete successfully.",
-  };
 };

@@ -1,9 +1,10 @@
 import axios from "axios";
 import { WHATSAPP_API_KEY, WHATSAPP_URL } from "../../configs/config";
 import { logSentMessages } from "../../models/MessagesModel";
-import { logError } from "../../models/ErrorModel";
 import { ERROR_TYPE } from "../../configs/errorConfig";
 import { ProductType } from "../../db/types";
+import { ErrorLogger } from "../../util/ErrorLogger";
+import { title } from "process";
 
 // ###############################
 // General Send Messages Functions
@@ -20,15 +21,14 @@ export const sendTemplateMessage = async ({
 }: {
   reciever: string;
 }) => {
+  // data
+  // const reciever = "923362601112";
+  const templateName = "drop_alert";
+  const languageCode = "en";
+  const username = "John";
+  const productTitle = "Navy Basic Short MN-SHT-SS23-003 A";
+  const productID = "123";
   try {
-    // data
-    // const reciever = "923362601112";
-    const templateName = "drop_alert";
-    const languageCode = "en";
-    const username = "John";
-    const productTitle = "Navy Basic Short MN-SHT-SS23-003 A";
-    const productID = "123";
-
     const response = await axios({
       url: `${WHATSAPP_URL}/messages`,
       method: "post",
@@ -79,7 +79,12 @@ export const sendTemplateMessage = async ({
       type: "template",
     });
   } catch (error) {
-    errorHandling(error, reciever);
+    await ErrorLogger({
+      type: ERROR_TYPE.MESSAGE_NOT_SENT,
+      error,
+      customErrorMessage: `Error in sending template (${templateName} to ${reciever})`,
+      consoleLog: true,
+    });
   }
 };
 
@@ -112,7 +117,12 @@ export const sendTextMessage = async ({
       type: "text",
     });
   } catch (error) {
-    errorHandling(error, reciever);
+    await ErrorLogger({
+      type: ERROR_TYPE.MESSAGE_NOT_SENT,
+      error,
+      customErrorMessage: `Error in sending text (${messageText} to ${reciever})`,
+      consoleLog: true,
+    });
   }
 };
 
@@ -150,7 +160,13 @@ export const sendReplyMessage = async ({
       type: "reply",
     });
   } catch (error) {
-    errorHandling(error, reciever);
+    await ErrorLogger({
+      error,
+      type: ERROR_TYPE.MESSAGE_NOT_SENT,
+      customErrorMessage: `Error in sending reply to ${reciever} with text: [${messageText}]`,
+      messageId: messageId.toString(),
+      consoleLog: true,
+    });
   }
 };
 
@@ -159,75 +175,85 @@ export const sendReplyMessage = async ({
 // ###############################
 
 export const sendMenuMessage = async ({ reciever }: { reciever: string }) => {
-  await axios({
-    url: `${WHATSAPP_URL}/messages`,
-    method: "post",
-    headers: {
-      Authorization: `Bearer ${WHATSAPP_API_KEY}`,
-      "Content-Type": `application/json`,
-    },
-    data: JSON.stringify({
-      messaging_product: "whatsapp",
-      to: reciever,
-      type: "interactive",
-      interactive: {
-        type: "list",
-        header: {
-          type: "text",
-          text: "Main Menu",
-        },
-        body: {
-          text: "Please choose from the below options.",
-        },
-        footer: {
-          text: "Walert.pk at your service",
-        },
-        action: {
-          button: "Tap for the options",
-          sections: [
-            {
-              title: "First Section",
-              rows: [
-                {
-                  id: "get_all_trackers",
-                  title: "1. Get All Trackers",
-                  description: "Do you want to get a list of your trackers?",
-                },
-                {
-                  id: "delete_tracker",
-                  title: "2. Delete Tracker",
-                  description:
-                    "Do you want to delete an existing price tracker?",
-                },
-                {
-                  id: "get_more_trackers",
-                  title: "3. Get More Trackers 🔥",
-                  description:
-                    "Do you want to increase your profile tracker limit?",
-                },
-              ],
-            },
-            {
-              title: "Second Section",
-              rows: [
-                {
-                  id: "delete_profile",
-                  title: "4. Delete Profile",
-                  description: "Do you want to unsubscribe from our services?",
-                },
-              ],
-            },
-          ],
-        },
+  try {
+    await axios({
+      url: `${WHATSAPP_URL}/messages`,
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${WHATSAPP_API_KEY}`,
+        "Content-Type": `application/json`,
       },
-    }),
-  });
+      data: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: reciever,
+        type: "interactive",
+        interactive: {
+          type: "list",
+          header: {
+            type: "text",
+            text: "Main Menu",
+          },
+          body: {
+            text: "Please choose from the below options.",
+          },
+          footer: {
+            text: "Walert.pk at your service",
+          },
+          action: {
+            button: "Tap for the options",
+            sections: [
+              {
+                title: "First Section",
+                rows: [
+                  {
+                    id: "get_all_trackers",
+                    title: "1. Get All Trackers",
+                    description: "Do you want to get a list of your trackers?",
+                  },
+                  {
+                    id: "delete_tracker",
+                    title: "2. Delete Tracker",
+                    description:
+                      "Do you want to delete an existing price tracker?",
+                  },
+                  {
+                    id: "get_more_trackers",
+                    title: "3. Get More Trackers 🔥",
+                    description:
+                      "Do you want to increase your profile tracker limit?",
+                  },
+                ],
+              },
+              {
+                title: "Second Section",
+                rows: [
+                  {
+                    id: "delete_profile",
+                    title: "4. Delete Profile",
+                    description:
+                      "Do you want to unsubscribe from our services?",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      }),
+    });
 
-  await logSentMessages({
-    sentText: "Main Menu",
-    sentTo: reciever,
-    type: "list",
-  });
+    await logSentMessages({
+      sentText: "Main Menu",
+      sentTo: reciever,
+      type: "list",
+    });
+  } catch (error) {
+    await ErrorLogger({
+      error,
+      type: ERROR_TYPE.MESSAGE_NOT_SENT,
+      customErrorMessage: `Error in sending MENU to ${reciever}`,
+      consoleLog: true,
+    });
+  }
 };
 
 export const sendTrackerListForDeletion = async ({
@@ -237,88 +263,144 @@ export const sendTrackerListForDeletion = async ({
   reciever: string;
   trackers: ProductType[];
 }) => {
-  const formatLink = (link: string | null) => {
-    if (!link) {
-      return;
-    }
-    if (link.length > 66) {
-      // because max length of description is 70
-      return `${link.trim().slice(0, 65)}...`;
-    }
+  try {
+    const formatLink = (link: string | null) => {
+      if (!link) {
+        return;
+      }
+      if (link.length > 66) {
+        // because max length of description is 70
+        return `${link.trim().slice(0, 65)}...`;
+      }
 
-    return link.trim();
-  };
+      return link.trim();
+    };
 
-  const formatName = (name: string | null) => {
-    if (!name) {
-      return;
-    }
-    if (name.length > 21) {
-      // because max length of description is 24
-      return `${name.trim().slice(0, 17)}...`;
-    }
+    const formatName = (name: string | null) => {
+      if (!name) {
+        return;
+      }
+      if (name.length > 21) {
+        // because max length of description is 24
+        return `${name.trim().slice(0, 17)}...`;
+      }
 
-    return name.trim();
-  };
-  await axios({
-    url: `${WHATSAPP_URL}/messages`,
-    method: "post",
-    headers: {
-      Authorization: `Bearer ${WHATSAPP_API_KEY}`,
-      "Content-Type": `application/json`,
-    },
-    data: JSON.stringify({
-      messaging_product: "whatsapp",
-      to: reciever,
-      type: "interactive",
-      interactive: {
-        type: "list",
-        header: {
-          type: "text",
-          text: "Tracker List",
-        },
-        body: {
-          text: "Please choose the tracker you want to delete.",
-        },
-        action: {
-          button: "Tap for the options",
-          sections: [
-            {
-              title: "List",
-              rows: trackers.map((val, index) => {
-                return {
-                  id: `${val.productId}`,
-                  title: `${index + 1}. ${formatName(val.productName)}`,
-                  description: `${formatLink(val.link)}`,
-                };
-              }),
-            },
-          ],
-        },
+      return name.trim();
+    };
+    await axios({
+      url: `${WHATSAPP_URL}/messages`,
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${WHATSAPP_API_KEY}`,
+        "Content-Type": `application/json`,
       },
-    }),
-  });
+      data: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: reciever,
+        type: "interactive",
+        interactive: {
+          type: "list",
+          header: {
+            type: "text",
+            text: "Tracker List",
+          },
+          body: {
+            text: "Please choose the tracker you want to delete.",
+          },
+          action: {
+            button: "Tap for the options",
+            sections: [
+              {
+                title: "List",
+                rows: trackers.map((val, index) => {
+                  return {
+                    id: `${val.productId}`,
+                    title: `${index + 1}. ${formatName(val.productName)}`,
+                    description: `${formatLink(val.link)}`,
+                  };
+                }),
+              },
+            ],
+          },
+        },
+      }),
+    });
 
-  await logSentMessages({
-    sentText: "Delete Tracker List",
-    sentTo: reciever,
-    type: "list",
-  });
+    await logSentMessages({
+      sentText: "Delete Tracker List",
+      sentTo: reciever,
+      type: "list",
+    });
+  } catch (error) {
+    await ErrorLogger({
+      error,
+      type: ERROR_TYPE.MESSAGE_NOT_SENT,
+      customErrorMessage: `Error in sending Tracker List for Deletion to ${reciever}`,
+      consoleLog: true,
+    });
+  }
 };
 
-// ###############################
-// Utility Section
-// ###############################
+export const sendDeleteConfrimMessage = async ({
+  reciever,
+}: {
+  reciever: string;
+}) => {
+  try {
+    await axios({
+      url: `${WHATSAPP_URL}/messages`,
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${WHATSAPP_API_KEY}`,
+        "Content-Type": `application/json`,
+      },
+      data: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: reciever,
+        type: "interactive",
+        interactive: {
+          type: "list",
+          header: {
+            type: "text",
+            text: "Delete Account Confirmation",
+          },
+          body: {
+            text: "Are you sure you want to delete your account?",
+          },
+          action: {
+            button: "Tap for the options",
+            sections: [
+              {
+                title: "Confirm",
+                rows: [
+                  {
+                    id: `delete_yes`,
+                    title: `Yes`,
+                  },
+                  {
+                    id: `delete_no`,
+                    title: `No`,
+                    description: `Your price trackers remain safe if you keep your account.`,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      }),
+    });
 
-const errorHandling = async (error: unknown, reciever: string) => {
-  const err =
-    error instanceof Error
-      ? error.message
-      : `Error in sending message to ${reciever}`;
-  console.error(err);
-
-  await logError({
-    type: ERROR_TYPE.MESSAGE_NOT_SENT,
-    errorMessage: err,
-  });
+    await logSentMessages({
+      sentText: "Delete confimation message",
+      sentTo: reciever,
+      type: "list",
+    });
+  } catch (error) {
+    await ErrorLogger({
+      error,
+      type: ERROR_TYPE.MESSAGE_NOT_SENT,
+      customErrorMessage: `Error in sending delete confirmation message to ${reciever}`,
+      consoleLog: true,
+    });
+  }
 };

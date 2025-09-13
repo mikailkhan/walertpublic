@@ -3,12 +3,16 @@ import { errorsLogTable } from "../db/schema";
 
 export const logError = async ({
   type,
-  errorMessage,
+  officialErrorMessage,
+  customErrorMessage,
   messageId,
 }: {
   type: string;
-  errorMessage: string;
+  officialErrorMessage?: string;
+  customErrorMessage?: string;
   messageId?: string;
 }) => {
-  await db.insert(errorsLogTable).values({ type, errorMessage, messageId });
+  await db
+    .insert(errorsLogTable)
+    .values({ type, officialErrorMessage, customErrorMessage, messageId });
 };

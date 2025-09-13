@@ -8,11 +8,14 @@ import { domainExtract } from "../scraper/util/util";
 import { startScraper } from "../scraper/main";
 import { getSupportedWebsite } from "../models/adminModel";
 import {
+  sendHelperMessage,
   sendListOfSupportedWebsitesMessage,
   sendTrackerInitialisedMessage,
 } from "./message_util/Templates";
 import { isURL } from "./message_util/util";
 import { sendReplyMessage, sendTextMessage } from "./message_util/SendMessage";
+import { ErrorLogger } from "../util/ErrorLogger";
+import { ERROR_TYPE } from "../configs/errorConfig";
 
 /**
  * This function stores a new tracker in the database, provided the user has not reached their maximum allowed trackers and the target website is supported.
@@ -35,7 +38,7 @@ export const addTracker = async ({
   if (await isTrackerLimitHit(reciever)) {
     sendTextMessage({
       reciever,
-      messageText: `🚦 Oops! You've reached your tracker limit. To start tracking your new product, please remove one of your existing trackers first in menu.`,
+      messageText: `🚦 Oops! You've reached your tracker limit. To start tracking your new product, please remove one of your existing trackers first in \`menu\`.`,
     });
     return;
   }
@@ -49,6 +52,7 @@ export const addTracker = async ({
   const website = domainExtract(url);
   const websiteDetails = await getSupportedWebsite(website); // details like price selector, active status etc
 
+  // if website is not found in supported website table or is inactive
   if (!(await isWebsiteSupported(website)) || !websiteDetails?.active) {
     await sendReplyMessage({
       reciever: reciever,
@@ -57,6 +61,11 @@ export const addTracker = async ({
     });
 
     await sendListOfSupportedWebsitesMessage({ reciever, message_id });
+    await sendHelperMessage({ number: reciever });
+    await ErrorLogger({
+      type: ERROR_TYPE.UNSUPPORTED_WEBSITE_REQ,
+      customErrorMessage: `Requested URL ${url} (${website})`,
+    });
     return;
   }
 
@@ -79,6 +88,11 @@ export const addTracker = async ({
       messageId: message_id,
     });
 
+    await ErrorLogger({
+      type: ERROR_TYPE.SCRAPER_FAILED,
+      customErrorMessage: `Scraper failed with url ${url}`,
+      messageId: message_id.toString(),
+    });
     return;
   }
 
@@ -124,6 +138,8 @@ export const handleNewUser = async ({
       messageText: `👋 Hello ${fullName}, welcome to Walert.pk! 🎉 We're excited to have you here.`,
       messageId: message_id,
     });
+
+    await sendHelperMessage({ number });
 
     if (isURL(text)) {
       addTracker({

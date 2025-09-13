@@ -59,6 +59,7 @@ export const handleAddSupportedWebsite = async (
     console.error(
       error instanceof Error ? error.message : "error in adding website"
     );
+
     return res
       .status(400)
       .json({ errorMessage: "Something went wrong in supported websites." });
