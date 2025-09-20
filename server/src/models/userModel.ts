@@ -1,9 +1,15 @@
-import { eq, getTableColumns } from "drizzle-orm";
+import { eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../db/db";
-import { productsTable, scraperLimitTable, usersTable } from "../db/schema";
+import {
+  productsScrapeTable,
+  productsTable,
+  scraperLimitTable,
+  usersTable,
+} from "../db/schema";
 import { getSupportedWebsite } from "./adminModel";
 import { isTrackerLimitHit } from "./utilModel";
 import { ProductType } from "../db/types";
+import { SCRAPE_STATUS } from "../configs/scrapeConfig";
 
 export const createNewUser = async ({
   fullName,
@@ -110,14 +116,25 @@ export const addProductTracker = async ({
     const websiteId = supportedWebsite?.websiteId;
     const currentPrice = originalPrice;
 
-    await db.insert(productsTable).values({
-      userId,
-      websiteId,
-      originalPrice,
-      link,
-      productName,
-      currentPrice,
-    });
+    const insertedProduct = await db
+      .insert(productsTable)
+      .values({
+        userId,
+        websiteId,
+        originalPrice,
+        link,
+        productName,
+        currentPrice,
+      })
+      .returning({ id: productsTable.productId });
+
+    if (insertedProduct.length !== 0) {
+      await db.insert(productsScrapeTable).values({
+        productId: insertedProduct[0].id,
+        status: SCRAPE_STATUS.SUCCESS,
+        lastScrape: sql`NOW()`,
+      });
+    }
 
     await updateCurrentTrackerLimit(userId);
 
@@ -144,7 +161,9 @@ export const getAllTrackers = async (number: string) => {
   } catch (error) {
     const errorMessage = "Error in fetching all trackers from database";
     console.error(
-      error instanceof Error ? `${errorMessage}: error.message` : errorMessage
+      error instanceof Error
+        ? `${errorMessage}: ${error.message}`
+        : errorMessage
     );
     return;
   }

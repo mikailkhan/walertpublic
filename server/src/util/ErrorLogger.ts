@@ -13,8 +13,15 @@ export const ErrorLogger = async ({
   messageId?: string;
   consoleLog?: boolean;
 }) => {
-  const officialErrorMessage =
-    error instanceof Error ? error.message : undefined;
+  let officialErrorMessage: string;
+
+  if (error && typeof error === "object" && "response" in error) {
+    const whatsappErrorMessage = (error as any).response.data.error.message;
+    officialErrorMessage = whatsappErrorMessage && whatsappErrorMessage;
+  } else {
+    officialErrorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+  }
 
   logError({
     type,

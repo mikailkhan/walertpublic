@@ -4,6 +4,7 @@ import { logSentMessages } from "../../models/MessagesModel";
 import { ERROR_TYPE } from "../../configs/errorConfig";
 import { ProductType } from "../../db/types";
 import { ErrorLogger } from "../../util/ErrorLogger";
+import { text } from "stream/consumers";
 
 // ###############################
 // General Send Messages Functions
@@ -17,16 +18,31 @@ import { ErrorLogger } from "../../util/ErrorLogger";
 
 export const sendTemplateMessage = async ({
   reciever,
+  templateName,
+  languageCode,
+  username,
+  productTitle,
+  productID,
+  website,
 }: {
   reciever: string;
+  templateName: string;
+  languageCode?: string;
+  username: string | null;
+  productTitle: string;
+  productID: string;
+  website: string;
 }) => {
   // data
+  languageCode ? languageCode : "en";
+  username ? username : ``;
   // const reciever = "923362601112";
-  const templateName = "drop_alert";
-  const languageCode = "en";
-  const username = "John";
-  const productTitle = "Navy Basic Short MN-SHT-SS23-003 A";
-  const productID = "123";
+  // const templateName = "drop_alert";
+  // const languageCode = "en";
+  // const username = "John";
+  // const productTitle = "Navy Basic Short MN-SHT-SS23-003 A";
+  // const productID = "123";
+
   try {
     const response = await axios({
       url: `${WHATSAPP_URL}/messages`,
@@ -41,7 +57,7 @@ export const sendTemplateMessage = async ({
         type: "template",
         template: {
           name: templateName,
-          language: { code: languageCode },
+          language: { code: "en" },
           components: [
             {
               type: "header",
@@ -52,7 +68,8 @@ export const sendTemplateMessage = async ({
             {
               type: "body",
               parameters: [
-                { type: "text", text: productTitle }, // {{2}} -> product_title
+                { type: "text", text: productTitle }, // {{1}} -> product_title
+                { type: "text", text: website }, // {{2}} -> product_website
               ],
             },
             {

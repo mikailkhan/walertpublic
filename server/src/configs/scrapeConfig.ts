@@ -1,0 +1,7 @@
+export const SCRAPE_STATUS = {
+  SUCCESS: "SUCCESS",
+  FAILED: "FAILED",
+  INPROGRESS: "IN_PROGRESS",
+};
+
+export type SCRAPE_STATUS_TYPE = typeof SCRAPE_STATUS;

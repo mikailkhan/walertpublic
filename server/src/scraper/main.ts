@@ -1,5 +1,4 @@
 import { ERROR_TYPE } from "../configs/errorConfig";
-import { logError } from "../models/ErrorModel";
 import { ScrapeResult } from "../types/ScrapeResult";
 import { ErrorLogger } from "../util/ErrorLogger";
 import { startNormalScraper } from "./modules/NormalScraper";

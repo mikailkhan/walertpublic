@@ -10,7 +10,7 @@ import {
 export const usersTable = pgTable("users", {
   userId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
   fullName: varchar({ length: 255 }),
-  number: varchar({ length: 13 }).unique(),
+  number: varchar({ length: 13 }).unique().notNull(),
   createdAt: timestamp().defaultNow(),
 });
 
@@ -49,14 +49,26 @@ export const productsTable = pgTable("products", {
   productId: integer()
     .primaryKey()
     .generatedAlwaysAsIdentity({ startWith: 1000 }),
-  productName: text(),
-  link: text(),
+  productName: text().notNull(),
+  link: text().notNull(),
   currentPrice: integer(),
   originalPrice: integer().notNull(),
   userId: integer().references(() => usersTable.userId, {
     onDelete: "cascade",
   }),
   websiteId: integer().references(() => websiteTable.websiteId),
+  createdAt: timestamp().defaultNow().notNull(),
+});
+
+export const productsScrapeTable = pgTable("product_scrape", {
+  productScrapeId: integer()
+    .primaryKey()
+    .generatedAlwaysAsIdentity({ startWith: 1000 }),
+  productId: integer()
+    .references(() => productsTable.productId, { onDelete: "cascade" })
+    .notNull(),
+  status: varchar({ length: 255 }),
+  lastScrape: timestamp(),
 });
 
 export const messagesReceivedTable = pgTable("messages_received", {
