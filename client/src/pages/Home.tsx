@@ -33,7 +33,7 @@ const Home = () => {
           </div>
 
           <div className="row">
-            <div className="col-4 mx-auto">
+            <div className="col-md-4 mx-auto">
               <img
                 src="https://picsum.photos/600/300"
                 alt="random"
@@ -45,40 +45,42 @@ const Home = () => {
       </section>
 
       <section id="product">
-        <form>
-          <div className="row mt-5">
-            <div className="col-md-5 mx-auto">
-              <div className="input-group">
-                <span className="input-group-text">
-                  <MdProductionQuantityLimits />
-                </span>
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="product-input"
-                    placeholder="Enter Product URL"
-                    value={productUrl}
-                    onChange={handleProductUrl}
-                  />
+        <div className="container">
+          <form>
+            <div className="row mt-5">
+              <div className="col-md-5 mx-auto">
+                <div className="input-group">
+                  <span className="input-group-text">
+                    <MdProductionQuantityLimits />
+                  </span>
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="product-input"
+                      placeholder="Enter Product URL"
+                      value={productUrl}
+                      onChange={handleProductUrl}
+                    />
 
-                  <label htmlFor="product-input">
-                    Enter Product URL (https://example.com)
-                  </label>
+                    <label htmlFor="product-input">
+                      Enter Product URL (https://example.com)
+                    </label>
+                  </div>
+
+                  <button
+                    className={`btn ${
+                      isCorrectUrl ? `btn-success` : `btn-secondary bg-grey`
+                    }`}
+                    disabled={!isCorrectUrl}
+                  >
+                    <FaWhatsapp className="text-white" />
+                  </button>
                 </div>
-
-                <button
-                  className={`btn ${
-                    isCorrectUrl ? `btn-success` : `btn-secondary bg-grey`
-                  }`}
-                  disabled={!isCorrectUrl}
-                >
-                  <FaWhatsapp className="text-white" />
-                </button>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
 
         <div className="container">
           <div className="row my-5">
@@ -91,7 +93,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section id="guide" className="bg-primary text-white shadow-lg my-5">
+      <section id="guide" className="bg-primary text-white my-5">
         <div className="container py-5">
           <div className="row">
             <div className="col-md-7 mx-auto my-4 p-2">
@@ -99,9 +101,9 @@ const Home = () => {
                 Step by Step Process to Track Price
               </h2>
             </div>
-            <div className="row ">
-              <div className="col-sm-6 mx-auto mb-3">
-                <div className="card">
+            <div className="row mx-0">
+              <div className="col-md-6 mb-3 mx-auto">
+                <div className="card ">
                   <div className="card-body text-center">
                     <h5 className="card-title mb-4">
                       <TbCircleNumber1Filled className="text-primary" />
@@ -119,8 +121,8 @@ const Home = () => {
               <FaDownLong className="mx-auto my-3 text-white " />
             </div>
 
-            <div className="row ">
-              <div className="col-sm-6 mx-auto mb-3">
+            <div className="row mx-0">
+              <div className="col-md-6 mx-auto mb-3">
                 <div className="card">
                   <div className="card-body text-center">
                     <h5 className="card-title mb-4">
@@ -138,8 +140,8 @@ const Home = () => {
               <FaDownLong className="mx-auto my-3 text-white " />
             </div>
 
-            <div className="row ">
-              <div className="col-sm-6 mx-auto mb-3">
+            <div className="row mx-0">
+              <div className="col-md-6 mx-auto mb-3">
                 <div className="card">
                   <div className="card-body text-center">
                     <h5 className="card-title mb-4">
@@ -158,8 +160,8 @@ const Home = () => {
               <FaDownLong className="mx-auto my-3 text-white " />
             </div>
 
-            <div className="row ">
-              <div className="col-sm-6 mx-auto mb-3">
+            <div className="row mx-0">
+              <div className="col-md-6 mx-auto mb-3">
                 <div className="card">
                   <div className="card-body text-center">
                     <h5 className="card-title mb-4">Want Help?</h5>
@@ -185,37 +187,32 @@ const Home = () => {
             <h2 className="display-5 text-center">What is Walert?</h2>
           </div>
           <div className="row my-5">
-            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded shadow mx-auto p-5">
+            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded  mx-auto p-5">
               <p className="lead">
-                Walert.pk is your smart price-tracking companion!
+                Walert is your smart price-tracking companion!
               </p>
             </div>
           </div>
-        </div>
-        <div className="container">
+
           <div className="row my-5">
-            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded shadow mx-auto p-5">
+            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded  mx-auto p-5">
               <p className="lead">
                 That helps you shop wisely, save money, and stay within budget.
               </p>
             </div>
           </div>
-        </div>
 
-        <div className="container">
           <div className="row my-5">
-            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded shadow mx-auto p-5">
+            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded  mx-auto p-5">
               <p className="lead">
                 With powerful features like price tracking and drop alerts,
                 you'll always know the best time to buy your favorite products.
               </p>
             </div>
           </div>
-        </div>
 
-        <div className="container">
           <div className="row my-5">
-            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded shadow mx-auto p-5">
+            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded  mx-auto p-5">
               <p className="lead">
                 Get notified instantly, grab the best deals, and become a savvy
                 shopper with Walert.pk.
