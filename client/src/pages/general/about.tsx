@@ -34,29 +34,28 @@ const About = () => {
                 </a>
               </p>
             </div>
-            <div className="col-md-6 py-12">
-              <div className="max-w-4xl mx-auto px-6 text-center">
-                <h2 className="text-2xl font-bold">
-                  Ready to save on your next purchase?
-                </h2>
-                <p className="mt-2 text-gray-700">
-                  Send the product link to our WhatsApp and we'll start tracking
-                  it for you right away.
-                </p>
 
-                <div className="mt-6 flex justify-center">
-                  <a
-                    href="https://wa.me/923352501007?text=https://hello.com"
-                    className="inline-block rounded-2xl px-6 py-3 btn btn-success text-white font-medium shadow"
-                    target="_blank"
-                  >
-                    Message us on WhatsApp
-                  </a>
+            <div className="col-md-6 col-sm-5 mx-auto">
+              <div className="row mx-0">
+                <div className="bg-success text-white rounded my-3 p-5">
+                  <h2 className="display-5 text-center">What is Walert?</h2>
+                  <ul className="lead">
+                    <li>Walert is your smart price-tracking companion!</li>
+                    <li>
+                      That helps you shop wisely, save money, and stay within
+                      budget.
+                    </li>
+                    <li>
+                      With powerful features like price tracking and drop
+                      alerts, you'll always know the best time to buy your
+                      favorite products.
+                    </li>
+                    <li>
+                      Get notified instantly, grab the best deals, and become a
+                      savvy shopper with Walert.pk.
+                    </li>
+                  </ul>
                 </div>
-
-                <p className="mt-4 text-sm text-gray-600">
-                  Phone: +92 335 2501007
-                </p>
               </div>
             </div>
           </div>

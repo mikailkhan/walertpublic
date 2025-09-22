@@ -184,39 +184,30 @@ const Home = () => {
       <section id="cta">
         <div className="container">
           <div className="row">
-            <h2 className="display-5 text-center">What is Walert?</h2>
-          </div>
-          <div className="row my-5">
-            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded  mx-auto p-5">
-              <p className="lead">
-                Walert is your smart price-tracking companion!
-              </p>
-            </div>
-          </div>
+            <div className="col-md-6 py-12 text-white border p-5 border-success bg-success rounded shadow mx-auto my-5">
+              <div className="max-w-4xl px-6 text-center">
+                <h2 className="text-2xl font-bold">
+                  Ready to save on your next purchase?
+                </h2>
+                <p className="mt-2 text-gray-700">
+                  Send the product link to our WhatsApp and we'll start tracking
+                  it for you right away.
+                </p>
 
-          <div className="row my-5">
-            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded  mx-auto p-5">
-              <p className="lead">
-                That helps you shop wisely, save money, and stay within budget.
-              </p>
-            </div>
-          </div>
+                <div className="mt-6 flex justify-center">
+                  <a
+                    href="https://wa.me/923352501007?text=https://hello.com"
+                    className="inline-block rounded-2xl px-6 py-3 btn btn-primary text-white font-medium shadow"
+                    target="_blank"
+                  >
+                    Message us on WhatsApp
+                  </a>
+                </div>
 
-          <div className="row my-5">
-            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded  mx-auto p-5">
-              <p className="lead">
-                With powerful features like price tracking and drop alerts,
-                you'll always know the best time to buy your favorite products.
-              </p>
-            </div>
-          </div>
-
-          <div className="row my-5">
-            <div className="col-sm-7 col-md-5 whatsapp-secondary-bg text-white rounded  mx-auto p-5">
-              <p className="lead">
-                Get notified instantly, grab the best deals, and become a savvy
-                shopper with Walert.pk.
-              </p>
+                <p className="mt-4 text-sm text-gray-600">
+                  Phone: +92 335 2501007
+                </p>
+              </div>
             </div>
           </div>
         </div>
