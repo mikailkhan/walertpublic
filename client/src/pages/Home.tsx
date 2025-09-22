@@ -183,7 +183,7 @@ const Home = () => {
 
       <section id="cta">
         <div className="container">
-          <div className="row">
+          <div className="row mx-0">
             <div className="col-md-6 py-12 text-white border p-5 border-success bg-success rounded shadow mx-auto my-5">
               <div className="max-w-4xl px-6 text-center">
                 <h2 className="text-2xl font-bold">
