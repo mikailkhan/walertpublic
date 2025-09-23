@@ -1,0 +1,42 @@
+.anaheim-font {
+  font-family: "Anaheim", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/*
+* Custom Colors 
+*/
+
+.custom-secondary {
+  color: #00bfb2;
+}
+
+.custom-secondary-bg {
+  background-color: #00bfb2;
+}
+
+.custom-tertiary {
+  color: #ef5df8;
+}
+
+.custom-tertiary-bg {
+  background-color: #ef5df8;
+}
+
+.whatsapp-primary {
+  color: #113928;
+}
+
+.whatsapp-primary-bg {
+  background-color: #113928;
+}
+
+.whatsapp-secondary {
+  color: #36a857;
+}
+
+.whatsapp-secondary-bg {
+  background-color: #36a857;
+}
