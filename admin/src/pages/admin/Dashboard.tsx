@@ -1,8 +1,18 @@
+import OverallPerformance from "./KPIS/OverallPerformance";
+import Requests from "./KPIS/Requests";
+import TotalErrors from "./KPIS/TotalErrors";
+import Websites from "./KPIS/Websites";
+
 const Dashboard = () => {
   return (
-    <div className="row ">
-      <h1>HEllo</h1>
-    </div>
+    <section className="my-2">
+      <div className="row">
+        <OverallPerformance />
+        <Websites />
+        <Requests />
+        <TotalErrors />
+      </div>
+    </section>
   );
 };
 
