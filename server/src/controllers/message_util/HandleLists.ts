@@ -4,7 +4,7 @@ import { logMoreTrackerReq } from "../../models/MoreTrackerModel";
 import {
   deleteTracker,
   deleteUser,
-  getAllTrackers,
+  getAllTrackersOfUser,
 } from "../../models/userModel";
 import { Message } from "../../types/Message";
 import { ErrorLogger } from "../../util/ErrorLogger";
@@ -164,7 +164,7 @@ const handleDeleteTrackerReply = async ({
   listReplyId: string;
   number: string;
 }): Promise<boolean> => {
-  const trackersList = await getAllTrackers(number);
+  const trackersList = await getAllTrackersOfUser(number);
 
   trackersList?.forEach(async (val) => {
     if (listReplyId === val.productId.toString()) {
@@ -207,7 +207,7 @@ const handleDeleteTrackerReply = async ({
  * @returns {Promise<void>} A promise that resolves once the tracker list has been sent.
  */
 const handleDeleteTracker = async (number: string) => {
-  const trackers = await getAllTrackers(number);
+  const trackers = await getAllTrackersOfUser(number);
   if (trackers) {
     await sendTrackerListForDeletion({ reciever: number, trackers });
   }
@@ -247,7 +247,7 @@ const handleGetMoreTrackers = async (number: string) => {
  * @returns {Promise<void>} A promise that resolves once the list of active trackers has been sent.
  */
 const handleGetAllTrackers = async (number: string) => {
-  const trackersList = await getAllTrackers(number);
+  const trackersList = await getAllTrackersOfUser(number);
 
   await sendTextMessage({
     reciever: number,

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { getMoreTrackerTable, usersTable } from "../db/schema";
 
@@ -34,5 +34,25 @@ export const logMoreTrackerReq = async (number: string): Promise<boolean> => {
         : "Error in logging get more trackers request"
     );
     return false;
+  }
+};
+
+export const getTotalTrackerRequests = async () => {
+  try {
+    const [result] = await db
+      .select({ count: count() })
+      .from(getMoreTrackerTable);
+    return result.count;
+  } catch (error) {
+    return;
+  }
+};
+
+export const getAllTrackersRequests = async () => {
+  try {
+    const result = await db.select().from(getMoreTrackerTable);
+    return result;
+  } catch (error) {
+    return;
   }
 };

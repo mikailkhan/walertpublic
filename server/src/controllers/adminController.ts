@@ -1,7 +1,28 @@
 import { Request, Response } from "express";
-import { addSupportedWebsite } from "../models/adminModel";
+import {
+  addSupportedWebsite,
+  getAllSupportedWebsites,
+} from "../models/adminModel";
 import { domainExtract } from "../scraper/util/util";
 import { startScraper } from "../scraper/main";
+import { getAllUsers, getTotalUsers } from "../models/userModel";
+import {
+  getAllRecievedMessages,
+  getAllSentMessages,
+  getTotalMessagesRecieved,
+  getTotalMessagesSent,
+} from "../models/MessagesModel";
+import {
+  getAllTrackers,
+  getTotalTrackersPlaced,
+  getTotalWebsites,
+} from "../models/ScrapeModel";
+import {
+  getAllTrackersRequests,
+  getTotalTrackerRequests,
+} from "../models/MoreTrackerModel";
+import { getAllErrors, getTotalErrors } from "../models/ErrorModel";
+import { ERROR_TYPE } from "../configs/errorConfig";
 
 /**
  * Adds a website to the database by the admin.
@@ -64,4 +85,78 @@ export const handleAddSupportedWebsite = async (
       .status(400)
       .json({ errorMessage: "Something went wrong in supported websites." });
   }
+};
+
+/**
+ * KPIS Sections
+ */
+
+export const handleDashboard = async (req: Request, res: Response) => {
+  const usersCount = await getTotalUsers();
+  const messagesSentCount = await getTotalMessagesSent();
+  const messagesRecievedCount = await getTotalMessagesRecieved();
+  const trackersPlacedCount = await getTotalTrackersPlaced();
+  const supportedWebsitesCount = await getTotalWebsites();
+  const supportedWebsitesActiveCount = await getTotalWebsites(true);
+  const supportedWebsitesNonActiveCount = await getTotalWebsites(false);
+  const moreTrackersRequestsCount = await getTotalTrackerRequests();
+  const errorsCount = await getTotalErrors();
+  const errorsGeneralCount = await getTotalErrors(ERROR_TYPE.GENERAL);
+  const errorsInvalidReqCount = await getTotalErrors(
+    ERROR_TYPE.INVALID_REQUEST
+  );
+  const errorsMessageNotSentCount = await getTotalErrors(
+    ERROR_TYPE.MESSAGE_NOT_SENT
+  );
+  const errorsScraperFailedCount = await getTotalErrors(
+    ERROR_TYPE.SCRAPER_FAILED
+  );
+  const errorsTrackerNotDeletedCount = await getTotalErrors(
+    ERROR_TYPE.TRACKER_NOT_DELETED
+  );
+  const errorsUnsupportedSiteReqCount = await getTotalErrors(
+    ERROR_TYPE.UNSUPPORTED_WEBSITE_REQ
+  );
+
+  return res.status(200).json({
+    usersCount,
+    messagesSentCount,
+    messagesRecievedCount,
+    trackersPlacedCount,
+    supportedWebsitesCount,
+    supportedWebsitesActiveCount,
+    supportedWebsitesNonActiveCount,
+    moreTrackersRequestsCount,
+    errorsCount,
+    errorsGeneralCount,
+    errorsInvalidReqCount,
+  });
+};
+
+export const handleMessagesSent = async (req: Request, res: Response) => {
+  return res.status(200).json(await getAllSentMessages());
+};
+
+export const handleMessagesRecieved = async (req: Request, res: Response) => {
+  return res.status(200).json(await getAllRecievedMessages());
+};
+
+export const handleMoreTrackerReq = async (req: Request, res: Response) => {
+  return res.status(200).json(await getAllTrackersRequests());
+};
+
+export const handleAllProducts = async (req: Request, res: Response) => {
+  return res.status(200).json(await getAllTrackers());
+};
+
+export const handleAllUsers = async (req: Request, res: Response) => {
+  return res.status(200).json(await getAllUsers());
+};
+
+export const handleAllWebsites = async (req: Request, res: Response) => {
+  return res.status(200).json(await getAllSupportedWebsites(null));
+};
+
+export const handleAllErrors = async (req: Request, res: Response) => {
+  return res.status(200).json(await getAllErrors());
 };

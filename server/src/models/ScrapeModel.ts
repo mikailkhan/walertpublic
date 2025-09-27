@@ -1,4 +1,4 @@
-import { and, eq, getTableColumns, lt, ne, sql } from "drizzle-orm";
+import { and, count, eq, getTableColumns, lt, ne, sql } from "drizzle-orm";
 import { db } from "../db/db";
 import {
   productsScrapeTable,
@@ -73,4 +73,51 @@ export const updateCurrentProductPrice = async (
       .set({ currentPrice: currentPrice })
       .where(eq(productsScrapeTable.productId, productId));
   } catch (error) {}
+};
+
+export const getTotalTrackersPlaced = async () => {
+  try {
+    const [result] = await db.select({ count: count() }).from(productsTable);
+    return result.count;
+  } catch (error) {
+    return;
+  }
+};
+
+/**
+ * Get total number of supported websites.
+ *
+ * Status Param:
+ * Undefined = Get all websites
+ * True = Get all active websites
+ * False = Get all non-active websites
+ *
+ * @param {boolean} status - active or non-active
+ * @returns {number} - returns a promise that resolves when a count of rows is fetched
+ */
+export const getTotalWebsites = async (status?: boolean | undefined) => {
+  try {
+    let result;
+    if (status === undefined) {
+      [result] = await db.select({ count: count() }).from(websiteTable);
+    } else {
+      [result] = await db
+        .select({ count: count() })
+        .from(websiteTable)
+        .where(eq(websiteTable.active, status));
+    }
+
+    return result.count;
+  } catch (error) {
+    return;
+  }
+};
+
+export const getAllTrackers = async () => {
+  try {
+    const result = await db.select().from(productsTable);
+    return result;
+  } catch (error) {
+    return;
+  }
 };

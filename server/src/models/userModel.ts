@@ -1,4 +1,4 @@
-import { eq, getTableColumns, sql } from "drizzle-orm";
+import { count, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../db/db";
 import {
   productsScrapeTable,
@@ -48,6 +48,24 @@ export const getUser = async (number: string) => {
         ? `Error in getting user: ${error.message}`
         : "Error in getting user"
     );
+    return;
+  }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const result = await db.select().from(usersTable);
+    return result;
+  } catch (error) {
+    return;
+  }
+};
+
+export const getTotalUsers = async () => {
+  try {
+    const [result] = await db.select({ count: count() }).from(usersTable);
+    return result.count;
+  } catch (error) {
     return;
   }
 };
@@ -149,7 +167,7 @@ export const addProductTracker = async ({
   }
 };
 
-export const getAllTrackers = async (number: string) => {
+export const getAllTrackersOfUser = async (number: string) => {
   try {
     const result: ProductType[] = await db
       .select({ ...getTableColumns(productsTable) })

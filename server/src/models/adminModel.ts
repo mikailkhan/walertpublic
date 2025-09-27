@@ -55,8 +55,16 @@ export const getSupportedWebsite = async (website: string | undefined) => {
  * @param {boolean} active - true: all active sites, false: all non-active sites
  * @returns {object} result
  */
-export const getAllSupportedWebsites = async (active: boolean = false) => {
+export const getAllSupportedWebsites = async (
+  active: boolean | null = false
+) => {
   try {
+    if (active === null) {
+      const result = await db.select().from(websiteTable);
+
+      return result;
+    }
+
     const result = await db
       .select()
       .from(websiteTable)

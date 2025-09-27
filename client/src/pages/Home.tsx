@@ -28,7 +28,7 @@ const Home = () => {
             <p className="lead text-center font-monospace">
               Never miss a deal 🚀 Get instant product price updates sent
               straight to your
-              <span className="whatsapp-secondary fw-bold"> WhatsApp</span>!
+              <span className="text-success fw-bold"> WhatsApp</span>!
             </p>
           </div>
 

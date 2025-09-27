@@ -32,7 +32,7 @@ export const createApp = () => {
   );
 
   // cron jobs
-  cron.schedule("*/5 * * * * *", scrapeTask);
+  // cron.schedule("*/5 * * * * *", scrapeTask);
 
   return app;
 };

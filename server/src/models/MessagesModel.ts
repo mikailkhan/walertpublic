@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { db } from "../db/db";
 import {
   messagesReceivedTable,
@@ -67,6 +67,47 @@ export const logSentMessages = async ({
         ? `Error in logging sent message: ${error.message}`
         : "Error in logging sent message"
     );
+    return;
+  }
+};
+
+export const getTotalMessagesSent = async () => {
+  try {
+    const [result] = await db
+      .select({ count: count() })
+      .from(messagesSentTable);
+    return result.count;
+  } catch (error) {
+    return;
+  }
+};
+
+export const getTotalMessagesRecieved = async () => {
+  try {
+    const [result] = await db
+      .select({ count: count() })
+      .from(messagesReceivedTable);
+    return result.count;
+  } catch (error) {
+    return;
+  }
+};
+
+export const getAllRecievedMessages = async () => {
+  try {
+    const result = await db.select().from(messagesReceivedTable);
+
+    return result;
+  } catch (error) {
+    return;
+  }
+};
+
+export const getAllSentMessages = async () => {
+  try {
+    const result = await db.select().from(messagesSentTable);
+    return result;
+  } catch (error) {
     return;
   }
 };
