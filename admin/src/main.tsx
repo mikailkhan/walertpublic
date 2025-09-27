@@ -5,8 +5,15 @@ import "./scss/style.scss";
 import "./style/index.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-import Dashboard from "./pages/admin/Dashboard";
+import Dashboard from "./pages/admin/dashboard/Dashboard";
 import Login from "./pages/admin/Login";
+import Messages from "./pages/admin/messages/Messages";
+import Sent from "./pages/admin/messages/Sent";
+import Recieved from "./pages/admin/messages/Recieved";
+import Product from "./pages/admin/products/Product";
+import Customers from "./pages/admin/customers/Customers";
+import Errors from "./pages/admin/errors/Errors";
+import Websites from "./pages/admin/websites/Websites";
 
 const router = createBrowserRouter([
   {
@@ -23,8 +30,32 @@ const router = createBrowserRouter([
         path: `/`,
       },
       {
-        element: <Dashboard />,
+        element: <Messages />,
         path: `/messages`,
+      },
+      {
+        element: <Sent />,
+        path: `/sent-messages`,
+      },
+      {
+        element: <Recieved />,
+        path: `/recieved-messages`,
+      },
+      {
+        element: <Product />,
+        path: `/products`,
+      },
+      {
+        element: <Customers />,
+        path: `/customers`,
+      },
+      {
+        element: <Websites />,
+        path: `/websites`,
+      },
+      {
+        element: <Errors />,
+        path: `/errors`,
       },
     ],
   },

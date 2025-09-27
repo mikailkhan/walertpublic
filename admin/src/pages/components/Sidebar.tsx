@@ -1,7 +1,17 @@
+import {
+  BiSolidMessageRoundedCheck,
+  BiSolidMessageRoundedDetail,
+} from "react-icons/bi";
+import { CgWebsite } from "react-icons/cg";
 import { FaTachometerAlt, FaWhatsapp } from "react-icons/fa";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 import { IoPeople } from "react-icons/io5";
-import { MdProductionQuantityLimits } from "react-icons/md";
+import {
+  MdMessage,
+  MdOutlineError,
+  MdProductionQuantityLimits,
+} from "react-icons/md";
 import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = () => {
@@ -21,16 +31,58 @@ const Sidebar = () => {
       <hr />
       <ul className="nav nav-pills flex-column mb-auto">
         <li className="nav-item">
-          <NavLink to="/" className="nav-link active" aria-current="page">
+          <NavLink to="/" className="nav-link text-white" aria-current="page">
             <FaTachometerAlt className="me-2" />
             Home
           </NavLink>
         </li>
         <li>
-          <NavLink to="/messages" className="nav-link text-white">
+          <Link
+            className="nav-link data-toggle text-white"
+            data-bs-toggle="collapse"
+            to="#collapseExample"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+          >
             <FaWhatsapp className="me-2" />
             Messages
-          </NavLink>
+            <IoMdArrowDropdown />
+          </Link>
+          <div className="collapse" id="collapseExample">
+            <ul className="nav nav-pill ">
+              <li>
+                <NavLink
+                  to="/messages"
+                  className="nav-link text-white"
+                  aria-current="page"
+                >
+                  <MdMessage className="me-2" />
+                  Recent Activity
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/sent-messages"
+                  className="nav-link text-white"
+                  aria-current="page"
+                >
+                  <BiSolidMessageRoundedCheck className="me-2" />
+                  Sent
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/recieved-messages"
+                  className="nav-link  text-white"
+                  aria-current="page"
+                >
+                  <BiSolidMessageRoundedDetail className="me-2" />
+                  Recieved
+                </NavLink>
+              </li>
+            </ul>
+          </div>
         </li>
         <li>
           <NavLink to="/products" className="nav-link text-white">
@@ -42,6 +94,18 @@ const Sidebar = () => {
           <NavLink to="/customers" className="nav-link text-white">
             <IoPeople className="me-2" />
             Customers
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/websites" className="nav-link text-white">
+            <CgWebsite className="me-2" />
+            Websites
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/errors" className="nav-link text-white">
+            <MdOutlineError className="me-2" />
+            Errors
           </NavLink>
         </li>
       </ul>

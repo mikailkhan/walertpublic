@@ -1,18 +1,18 @@
+import Breadcrumb from "../../components/Breadcrumb";
 import OverallPerformance from "./KPIS/OverallPerformance";
 import Requests from "./KPIS/Requests";
 import TotalErrors from "./KPIS/TotalErrors";
-import Websites from "./KPIS/Websites";
+import Websites from "./KPIS/WebsitesKpi";
 
 const Dashboard = () => {
   return (
-    <section className="my-2">
-      <div className="row">
-        <OverallPerformance />
-        <Websites />
-        <Requests />
-        <TotalErrors />
-      </div>
-    </section>
+    <div className="row">
+      <Breadcrumb />
+      <OverallPerformance />
+      <Websites />
+      <Requests />
+      <TotalErrors />
+    </div>
   );
 };
 

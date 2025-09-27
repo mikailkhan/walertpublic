@@ -6,10 +6,10 @@ const Layout = () => {
     <>
       <main className="flex-grow-1">
         <div className="row">
-          <div className="col-md-3 mx-0">
+          <div className="col-md-2 mx-0">
             <Sidebar />
           </div>
-          <div className="col-md-9">
+          <div className="col-md-10 my-3">
             <Outlet />
           </div>
         </div>
