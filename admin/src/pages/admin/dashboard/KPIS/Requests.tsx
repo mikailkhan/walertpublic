@@ -1,4 +1,8 @@
-const Requests = () => {
+const Requests = ({
+  moreTrackersRequestsCount,
+}: {
+  moreTrackersRequestsCount: number;
+}) => {
   return (
     <>
       <div className="col-md-4">
@@ -10,10 +14,10 @@ const Requests = () => {
             </h5>
             <ul className="mt-2">
               <li className="card-text">
-                <span className="fw-bold text-primary">
-                  Total Requests for more Trackers:{" "}
+                <span className="fw-bold text-primary me-2">
+                  Total Requests for more Trackers:
                 </span>
-                : 50
+                {moreTrackersRequestsCount}
               </li>
             </ul>
           </div>

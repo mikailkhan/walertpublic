@@ -1,6 +1,14 @@
 import React from "react";
 
-const Websites = () => {
+const Websites = ({
+  supportedWebsitesCount,
+  supportedWebsitesActiveCount,
+  supportedWebsitesNonActiveCount,
+}: {
+  supportedWebsitesCount: number;
+  supportedWebsitesActiveCount: number;
+  supportedWebsitesNonActiveCount: number;
+}) => {
   return (
     <>
       <div className="col-md-4">
@@ -12,14 +20,18 @@ const Websites = () => {
             </h5>
             <ul className="mt-2">
               <li className="card-text">
-                <span className="fw-bold text-primary">Supported Websites</span>
-                : 10
+                <span className="fw-bold text-primary me-2">
+                  Supported Websites:{" "}
+                </span>
+                {supportedWebsitesCount}
               </li>
               <li className="card-text">
-                <span className="fw-bold text-primary">Active</span>: 10
+                <span className="fw-bold text-primary me-2">Active: </span>
+                {supportedWebsitesActiveCount}
               </li>
               <li className="card-text">
-                <span className="fw-bold text-primary">Non-Active</span>: 10
+                <span className="fw-bold text-primary me-2">Non-Active: </span>
+                {supportedWebsitesNonActiveCount}
               </li>
             </ul>
           </div>

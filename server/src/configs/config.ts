@@ -18,3 +18,6 @@ export const WHATSAPP_VERIFY_TOKEN = env.WHATSAPP_VERIFY_TOKEN;
 // STATUSES
 export const SUCCESS_STATUS = "successful";
 export const FAILED_STATUS = "failed";
+
+// Admin
+export const ADMIN_URL = env.ADMIN_URL;

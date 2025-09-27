@@ -7,13 +7,13 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import Dashboard from "./pages/admin/dashboard/Dashboard";
 import Login from "./pages/admin/Login";
-import Messages from "./pages/admin/messages/Messages";
 import Sent from "./pages/admin/messages/Sent";
 import Recieved from "./pages/admin/messages/Recieved";
 import Product from "./pages/admin/products/Product";
 import Customers from "./pages/admin/customers/Customers";
 import Errors from "./pages/admin/errors/Errors";
 import Websites from "./pages/admin/websites/Websites";
+import TrackersReq from "./pages/admin/messages/TrackersReq";
 
 const router = createBrowserRouter([
   {
@@ -30,8 +30,8 @@ const router = createBrowserRouter([
         path: `/`,
       },
       {
-        element: <Messages />,
-        path: `/messages`,
+        element: <TrackersReq />,
+        path: `/tracker-requests`,
       },
       {
         element: <Sent />,

@@ -130,6 +130,10 @@ export const handleDashboard = async (req: Request, res: Response) => {
     errorsCount,
     errorsGeneralCount,
     errorsInvalidReqCount,
+    errorsMessageNotSentCount,
+    errorsScraperFailedCount,
+    errorsTrackerNotDeletedCount,
+    errorsUnsupportedSiteReqCount,
   });
 };
 

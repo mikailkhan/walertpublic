@@ -16,10 +16,7 @@ import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div
-      className="d-flex flex-column flex-shrink-0 mx-0 p-3 text-bg-dark min-vh-100"
-      style={{ width: "280px;" }}
-    >
+    <div className="d-flex flex-column flex-shrink-0 mx-0 p-3 text-bg-dark min-vh-100">
       <Link
         to="/"
         className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
@@ -53,12 +50,12 @@ const Sidebar = () => {
             <ul className="nav nav-pill ">
               <li>
                 <NavLink
-                  to="/messages"
+                  to="/tracker-requests"
                   className="nav-link text-white"
                   aria-current="page"
                 >
                   <MdMessage className="me-2" />
-                  Recent Activity
+                  Trackers Requests
                 </NavLink>
               </li>
               <li>

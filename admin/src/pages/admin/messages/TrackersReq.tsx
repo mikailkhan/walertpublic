@@ -1,6 +1,6 @@
 import Breadcrumb from "../../components/Breadcrumb";
 
-const Messages = () => {
+const TrackersReq = () => {
   return (
     <>
       <Breadcrumb />
@@ -46,4 +46,4 @@ const Messages = () => {
   );
 };
 
-export default Messages;
+export default TrackersReq;

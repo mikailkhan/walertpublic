@@ -1,6 +1,14 @@
-import React from "react";
-
-const OverallPerformance = () => {
+const OverallPerformance = ({
+  userCount,
+  messagesSentCount,
+  messagesRecievedCount,
+  trackersPlacedCount,
+}: {
+  userCount: number;
+  messagesSentCount: number;
+  messagesRecievedCount: number;
+  trackersPlacedCount: number;
+}) => {
   return (
     <>
       <div className="col-md-4">
@@ -12,19 +20,26 @@ const OverallPerformance = () => {
             </h5>
             <ul className="mt-2">
               <li className="card-text">
-                <span className="fw-bold text-primary">Total Users</span>: 200
+                <span className="fw-bold text-primary me-2">Total Users:</span>
+                {userCount}
               </li>
               <li className="card-text">
-                <span className="fw-bold text-primary">Messages Sent</span>:
-                1200
+                <span className="fw-bold text-primary me-2">
+                  Messages Sent:
+                </span>
+                {messagesSentCount}
               </li>
               <li className="card-text">
-                <span className="fw-bold text-primary">Messages Recieved</span>:
-                900
+                <span className="fw-bold text-primary me-2">
+                  Messages Recieved:
+                </span>
+                {messagesRecievedCount}
               </li>
               <li>
-                <span className="fw-bold text-primary">Trackers Placed</span>:
-                100
+                <span className="fw-bold text-primary me-2">
+                  Trackers Placed:
+                </span>
+                {trackersPlacedCount}
               </li>
             </ul>
           </div>

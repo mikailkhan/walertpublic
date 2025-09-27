@@ -1,4 +1,20 @@
-const TotalErrors = () => {
+const TotalErrors = ({
+  errorsCount,
+  errorsGeneralCount,
+  errorsInvalidReqCount,
+  errorsMessageNotSentCount,
+  errorsScraperFailedCount,
+  errorsTrackerNotDeletedCount,
+  errorsUnsupportedSiteReqCount,
+}: {
+  errorsCount: number;
+  errorsGeneralCount: number;
+  errorsInvalidReqCount: number;
+  errorsMessageNotSentCount: number;
+  errorsScraperFailedCount: number;
+  errorsTrackerNotDeletedCount: number;
+  errorsUnsupportedSiteReqCount: number;
+}) => {
   return (
     <>
       <div className="col-md-4 mt-3">
@@ -10,23 +26,44 @@ const TotalErrors = () => {
             </h5>
             <ul className="mt-2">
               <li className="card-text">
-                <span className="fw-bold text-primary">Errors Encountered</span>
-                : 50
-              </li>
-              <li className="card-text">
-                <span className="fw-bold text-primary">Scraper Failed</span>: 10
-              </li>
-              <li className="card-text">
-                <span className="fw-bold text-primary">
-                  Messages Sent Failures
+                <span className="fw-bold text-primary me-2">
+                  Total Errors Encountered:
                 </span>
-                : 10
+                {errorsCount}
+              </li>
+              <li className="card-text">
+                <span className="fw-bold text-primary me-2">General: </span>
+                {errorsGeneralCount}
+              </li>
+              <li className="card-text">
+                <span className="fw-bold text-primary me-2">
+                  Invalid Requests:{" "}
+                </span>
+                {errorsInvalidReqCount}
               </li>
               <li>
-                <span className="fw-bold text-primary">
-                  Messages Recieved Failures
+                <span className="fw-bold text-primary me-2">
+                  Messages Sent Failures:
                 </span>
-                : 1
+                {errorsMessageNotSentCount}
+              </li>
+              <li>
+                <span className="fw-bold text-primary me-2">
+                  Scraper Failures:
+                </span>
+                {errorsScraperFailedCount}
+              </li>
+              <li>
+                <span className="fw-bold text-primary me-2">
+                  Trackers Deletion Failures:
+                </span>
+                {errorsTrackerNotDeletedCount}
+              </li>
+              <li>
+                <span className="fw-bold text-primary me-2">
+                  Unsupported Site Requests:
+                </span>
+                {errorsUnsupportedSiteReqCount}
               </li>
             </ul>
           </div>
