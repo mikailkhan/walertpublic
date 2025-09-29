@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { count, desc, eq, getTableColumns } from "drizzle-orm";
 import { db } from "../db/db";
 import { getMoreTrackerTable, usersTable } from "../db/schema";
 
@@ -50,7 +50,11 @@ export const getTotalTrackerRequests = async () => {
 
 export const getAllTrackersRequests = async () => {
   try {
-    const result = await db.select().from(getMoreTrackerTable);
+    const result = await db
+      .select({ ...getTableColumns(usersTable) })
+      .from(getMoreTrackerTable)
+      .innerJoin(usersTable, eq(usersTable.userId, getMoreTrackerTable.userid))
+      .orderBy(desc(getMoreTrackerTable.reqId));
     return result;
   } catch (error) {
     return;

@@ -3,12 +3,14 @@ import {
   BiSolidMessageRoundedDetail,
 } from "react-icons/bi";
 import { CgWebsite } from "react-icons/cg";
+
 import { FaTachometerAlt, FaWhatsapp } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
-import { IoPeople } from "react-icons/io5";
+import { IoAddCircle, IoPeople } from "react-icons/io5";
 import {
   MdMessage,
+  MdOutlineCalendarViewMonth,
   MdOutlineError,
   MdProductionQuantityLimits,
 } from "react-icons/md";
@@ -94,10 +96,42 @@ const Sidebar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/websites" className="nav-link text-white">
+          <Link
+            className="nav-link data-toggle text-white"
+            data-bs-toggle="collapse"
+            to="#collapseWebsites"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapseWebsites"
+          >
             <CgWebsite className="me-2" />
             Websites
-          </NavLink>
+            <IoMdArrowDropdown />
+          </Link>
+          <div className="collapse" id="collapseWebsites">
+            <ul className="nav nav-pill ">
+              <li>
+                <NavLink
+                  to="/websites"
+                  className="nav-link text-white"
+                  aria-current="page"
+                >
+                  <MdOutlineCalendarViewMonth className="me-2" />
+                  View
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/websites-add"
+                  className="nav-link text-white"
+                  aria-current="page"
+                >
+                  <IoAddCircle className="me-2" />
+                  Add
+                </NavLink>
+              </li>
+            </ul>
+          </div>
         </li>
         <li>
           <NavLink to="/errors" className="nav-link text-white">
@@ -125,27 +159,27 @@ const Sidebar = () => {
         </NavLink>
         <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
           <li>
-            <NavLink className="dropdown-item" to="#">
+            <Link className="dropdown-item" to="#">
               New project...
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink className="dropdown-item" to="#">
+            <Link className="dropdown-item" to="#">
               Settings
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink className="dropdown-item" to="#">
+            <Link className="dropdown-item" to="#">
               Profile
-            </NavLink>
+            </Link>
           </li>
           <li>
             <hr className="dropdown-divider" />
           </li>
           <li>
-            <NavLink className="dropdown-item" to="#">
+            <Link className="dropdown-item" to="#">
               Sign out
-            </NavLink>
+            </Link>
           </li>
         </ul>
       </div>

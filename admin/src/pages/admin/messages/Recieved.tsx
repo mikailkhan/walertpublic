@@ -1,6 +1,20 @@
+import { useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
+import { getAllMessages } from "../../../services/api";
+import MessageRows from "./MessageRows";
 
 const Recieved = () => {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getAllMessages(false);
+      setMessages(response);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <Breadcrumb />
@@ -8,7 +22,7 @@ const Recieved = () => {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Date</th>
+            <th scope="col">Recieved At</th>
             <th scope="col">Name</th>
             <th scope="col">Number</th>
             <th scope="col">Type</th>
@@ -16,30 +30,7 @@ const Recieved = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>29/5/6</td>
-            <td>Otto</td>
-            <td>923378421008</td>
-            <td className="text-success">Sent</td>
-            <td>Hello</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>29/5/6</td>
-            <td>Otto</td>
-            <td className="text-success">Recieved</td>
-            <td>Bye</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>John</td>
-            <td>29/5/6</td>
-            <td>Otto</td>
-            <td>Sent</td>
-            <td>Hello</td>
-          </tr>
+          <MessageRows messages={messages} />
         </tbody>
       </table>
     </>

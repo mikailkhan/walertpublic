@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { count, desc, eq, getTableColumns } from "drizzle-orm";
 import { db } from "../db/db";
 import {
   messagesReceivedTable,
@@ -95,8 +95,17 @@ export const getTotalMessagesRecieved = async () => {
 
 export const getAllRecievedMessages = async () => {
   try {
-    const result = await db.select().from(messagesReceivedTable);
-
+    const result = await db
+      .select({
+        ...getTableColumns(messagesReceivedTable),
+        username: usersTable.fullName,
+      })
+      .from(messagesReceivedTable)
+      .innerJoin(
+        usersTable,
+        eq(usersTable.userId, messagesReceivedTable.userid)
+      )
+      .orderBy(desc(messagesReceivedTable.receivedMessageId));
     return result;
   } catch (error) {
     return;
@@ -105,7 +114,14 @@ export const getAllRecievedMessages = async () => {
 
 export const getAllSentMessages = async () => {
   try {
-    const result = await db.select().from(messagesSentTable);
+    const result = await db
+      .select({
+        ...getTableColumns(messagesSentTable),
+        username: usersTable.fullName,
+      })
+      .from(messagesSentTable)
+      .innerJoin(usersTable, eq(usersTable.userId, messagesSentTable.userid))
+      .orderBy(desc(messagesSentTable.sentMessageId));
     return result;
   } catch (error) {
     return;

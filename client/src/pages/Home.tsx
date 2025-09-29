@@ -35,7 +35,7 @@ const Home = () => {
           <div className="row">
             <div className="col-md-4 mx-auto">
               <img
-                src="https://picsum.photos/600/300"
+                src="/home.jpg"
                 alt="random"
                 className="rounded shadow-lg img-fluid d-block"
               />

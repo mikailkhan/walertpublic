@@ -1,6 +1,8 @@
 import { ScrapeResult } from "../../types/ScrapeResult";
 import puppeteer from "puppeteer";
 import { domainExtract, dataQualityCheck, cleanPrice } from "../util/util";
+import { ErrorLogger } from "../../util/ErrorLogger";
+import { ERROR_TYPE } from "../../configs/errorConfig";
 
 export const startPuppeteerScraper = async (
   url: string,
@@ -32,11 +34,6 @@ export const startPuppeteerScraper = async (
 
     return { price, domain, name, success: true, module };
   } catch (error) {
-    console.error(
-      `Error in startPuppeter: ${
-        error instanceof Error ? error.message : `Unknown error in server`
-      }`
-    );
     return {
       success: false,
       errorMessage: `Failed to fetch the price data.`,

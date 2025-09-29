@@ -1,4 +1,13 @@
-import { and, count, eq, getTableColumns, lt, ne, sql } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  getTableColumns,
+  lt,
+  ne,
+  sql,
+} from "drizzle-orm";
 import { db } from "../db/db";
 import {
   productsScrapeTable,
@@ -115,7 +124,25 @@ export const getTotalWebsites = async (status?: boolean | undefined) => {
 
 export const getAllTrackers = async () => {
   try {
-    const result = await db.select().from(productsTable);
+    const result = await db
+      .select({
+        ...getTableColumns(productsTable),
+        createdBy: usersTable.fullName,
+        number: usersTable.number,
+        lastScrape: productsScrapeTable.lastScrape,
+        website: websiteTable.website,
+      })
+      .from(productsTable)
+      .innerJoin(usersTable, eq(usersTable.userId, productsTable.userId))
+      .innerJoin(
+        productsScrapeTable,
+        eq(productsScrapeTable.productId, productsTable.productId)
+      )
+      .innerJoin(
+        websiteTable,
+        eq(websiteTable.websiteId, productsTable.websiteId)
+      )
+      .orderBy(desc(productsScrapeTable.productId));
     return result;
   } catch (error) {
     return;

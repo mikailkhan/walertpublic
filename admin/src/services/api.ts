@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import api from "./apiConfig";
 
 export const getDashboard = async () => {
@@ -17,5 +18,86 @@ export const getErrors = async () => {
     return response.data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getWebsites = async () => {
+  try {
+    const response = await api.get("/websites");
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCustomers = async () => {
+  try {
+    const response = await api.get("/customers");
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addWebsite = async (
+  website: string,
+  priceSelector: string,
+  nameSelector: string
+) => {
+  try {
+    const response = await api.post("/add-supported-website", {
+      url: website,
+      priceSelector: priceSelector,
+      productNameSelector: nameSelector,
+    });
+
+    if ("data" in response) {
+      return response.data;
+    }
+  } catch (error) {
+    return error instanceof AxiosError
+      ? error.response?.data
+      : { success: false };
+  }
+};
+
+export const getAllProducts = async () => {
+  try {
+    const response = await api.get("/products");
+
+    if ("data" in response) {
+      return response.data;
+    }
+  } catch (error) {
+    return error instanceof AxiosError && error.message;
+  }
+};
+
+export const getAllTrackersReq = async () => {
+  try {
+    const response = await api.get("/more-trackers-req");
+
+    if ("data" in response) {
+      return response.data;
+    }
+  } catch (error) {
+    return error instanceof AxiosError && error.message;
+  }
+};
+
+export const getAllMessages = async (isGetSent: boolean) => {
+  try {
+    let response;
+    if (isGetSent) {
+      response = await api.get("/messages-sent");
+    } else {
+      response = await api.get("/messages-recieved");
+    }
+
+    if ("data" in response) {
+      return response.data;
+    }
+  } catch (error) {
+    return error instanceof AxiosError && error.message;
   }
 };

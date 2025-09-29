@@ -3,6 +3,7 @@ import {
   handleAddSupportedWebsite,
   handleAllErrors,
   handleAllProducts,
+  handleAllUsers,
   handleAllWebsites,
   handleDashboard,
   handleMessagesRecieved,
@@ -19,7 +20,7 @@ router.get("/messages-sent", handleMessagesSent);
 router.get("/messages-recieved", handleMessagesRecieved);
 router.get("/more-trackers-req", handleMoreTrackerReq);
 router.get("/products", handleAllProducts);
-router.get("/customers", handleAllProducts);
+router.get("/customers", handleAllUsers);
 router.get("/websites", handleAllWebsites);
 router.get("/errors", handleAllErrors);
 

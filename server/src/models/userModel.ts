@@ -1,4 +1,4 @@
-import { count, eq, getTableColumns, sql } from "drizzle-orm";
+import { count, desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../db/db";
 import {
   productsScrapeTable,
@@ -10,6 +10,7 @@ import { getSupportedWebsite } from "./adminModel";
 import { isTrackerLimitHit } from "./utilModel";
 import { ProductType } from "../db/types";
 import { SCRAPE_STATUS } from "../configs/scrapeConfig";
+import { getPgColumnBuilders } from "drizzle-orm/pg-core/columns/all";
 
 export const createNewUser = async ({
   fullName,
@@ -54,7 +55,18 @@ export const getUser = async (number: string) => {
 
 export const getAllUsers = async () => {
   try {
-    const result = await db.select().from(usersTable);
+    const result = await db
+      .select({
+        scraperCurrentLimit: scraperLimitTable.scraperCurrentLimit,
+        scraperTotalLimit: scraperLimitTable.scraperTotalLimit,
+        ...getTableColumns(usersTable),
+      })
+      .from(usersTable)
+      .innerJoin(
+        scraperLimitTable,
+        eq(usersTable.userId, scraperLimitTable.userId)
+      )
+      .orderBy(desc(usersTable.userId));
     return result;
   } catch (error) {
     return;

@@ -1,6 +1,6 @@
 import { db } from "../db/db";
 import { websiteTable } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 /**
  * Add supported website
@@ -60,7 +60,10 @@ export const getAllSupportedWebsites = async (
 ) => {
   try {
     if (active === null) {
-      const result = await db.select().from(websiteTable);
+      const result = await db
+        .select()
+        .from(websiteTable)
+        .orderBy(desc(websiteTable.websiteId));
 
       return result;
     }

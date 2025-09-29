@@ -2,6 +2,8 @@ import { domainExtract, dataQualityCheck, cleanPrice } from "../util/util";
 import axios from "axios";
 import { ScrapeResult } from "../../types/ScrapeResult";
 import { load } from "cheerio";
+import { ErrorLogger } from "../../util/ErrorLogger";
+import { ERROR_TYPE } from "../../configs/errorConfig";
 
 export const startNormalScraper = async (
   url: string,
@@ -28,10 +30,6 @@ export const startNormalScraper = async (
 
     return { price, domain, name, module, success: true };
   } catch (error) {
-    console.error(
-      `Error fetching price from ${url}: `,
-      error instanceof Error ? error.message : `Unknown error in server`
-    );
     return {
       success: false,
       errorMessage: `Failed to fetch the price data.`,

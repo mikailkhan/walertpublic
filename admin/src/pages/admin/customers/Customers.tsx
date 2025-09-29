@@ -1,6 +1,19 @@
+import { useEffect, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
+import CustomersRow from "./CustomersRow";
+import { getCustomers } from "../../../services/api";
 
 const Customers = () => {
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getCustomers();
+      setCustomers(data);
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <Breadcrumb />
@@ -12,35 +25,12 @@ const Customers = () => {
             <th scope="col">Created At</th>
             <th scope="col">Name</th>
             <th scope="col">Number</th>
-            <th scope="col">Active Scraper</th>
+            <th scope="col">Active Scrapers</th>
             <th scope="col">Scrapers Limit</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>29/5/6</td>
-            <td>Otto</td>
-            <td>923378421008</td>
-            <td className="text-success">Sent</td>
-            <td>Hello</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>29/5/6</td>
-            <td>Otto</td>
-            <td className="text-success">Recieved</td>
-            <td>Bye</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>John</td>
-            <td>29/5/6</td>
-            <td>Otto</td>
-            <td>Sent</td>
-            <td>Hello</td>
-          </tr>
+          <CustomersRow customers={customers} />
         </tbody>
       </table>
     </>

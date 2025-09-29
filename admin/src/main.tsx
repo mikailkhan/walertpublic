@@ -14,6 +14,7 @@ import Customers from "./pages/admin/customers/Customers";
 import Errors from "./pages/admin/errors/Errors";
 import Websites from "./pages/admin/websites/Websites";
 import TrackersReq from "./pages/admin/messages/TrackersReq";
+import Add from "./pages/admin/websites/Add";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         element: <Websites />,
         path: `/websites`,
+      },
+      {
+        element: <Add />,
+        path: `/websites-add`,
       },
       {
         element: <Errors />,

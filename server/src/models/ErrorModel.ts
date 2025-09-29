@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { errorsLogTable } from "../db/schema";
 
@@ -20,7 +20,10 @@ export const logError = async ({
 
 export const getAllErrors = async () => {
   try {
-    const result = await db.select().from(errorsLogTable);
+    const result = await db
+      .select()
+      .from(errorsLogTable)
+      .orderBy(desc(errorsLogTable.errorId));
     return result;
   } catch (error) {
     return;
