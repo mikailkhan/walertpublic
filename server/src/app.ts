@@ -6,13 +6,19 @@ import cors from "cors";
 import cron from "node-cron";
 import scrapeTask from "./cron_tasks/scrapetask";
 import { ADMIN_URL } from "./configs/config";
+import { strategy } from "./middleware/Auth";
+import passport from "passport";
 
 export const createApp = () => {
   const app = express();
 
   app.use(express.json());
   app.use(express.urlencoded());
+  app.use(passport.initialize());
   app.use(cors());
+
+  // Authentication
+  passport.use(strategy());
 
   // Check DB connection
   testDBConnection();

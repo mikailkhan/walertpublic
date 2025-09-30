@@ -21,3 +21,4 @@ export const FAILED_STATUS = "failed";
 
 // Admin
 export const ADMIN_URL = env.ADMIN_URL;
+export const ADMIN_SECRET_KEY = env.SECRET_KEY;

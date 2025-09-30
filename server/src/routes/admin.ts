@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
   handleAddSupportedWebsite,
+  handleAdminLogin,
+  handleAdminRegistration,
   handleAllErrors,
   handleAllProducts,
   handleAllUsers,
@@ -10,12 +12,24 @@ import {
   handleMessagesSent,
   handleMoreTrackerReq,
 } from "../controllers/adminController";
+import passport from "passport";
 
 const router = Router();
 
-router.post("/add-supported-website", handleAddSupportedWebsite);
+router.post("/register", handleAdminRegistration);
+router.post("/login", handleAdminLogin);
 
-router.get("/dashboard", handleDashboard);
+router.post(
+  "/add-supported-website",
+  passport.authenticate("jwt", { session: false }),
+  handleAddSupportedWebsite
+);
+
+router.get(
+  "/dashboard",
+  passport.authenticate("jwt", { session: false }),
+  handleDashboard
+);
 router.get("/messages-sent", handleMessagesSent);
 router.get("/messages-recieved", handleMessagesRecieved);
 router.get("/more-trackers-req", handleMoreTrackerReq);

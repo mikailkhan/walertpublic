@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import {
   addSupportedWebsite,
+  createAdmin,
   getAllSupportedWebsites,
+  loginAdmin,
 } from "../models/adminModel";
 import { domainExtract } from "../scraper/util/util";
 import { startScraper } from "../scraper/main";
@@ -23,6 +25,105 @@ import {
 } from "../models/MoreTrackerModel";
 import { getAllErrors, getTotalErrors } from "../models/ErrorModel";
 import { ERROR_TYPE } from "../configs/errorConfig";
+import { loginSchema, registrationSchema } from "../util/ValidationSchema";
+import {
+  ADMIN_SECRET_KEY,
+  FAILED_STATUS,
+  SUCCESS_STATUS,
+} from "../configs/config";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+/* Util Functions */
+async function hashPassword(plainPassword: string) {
+  return await bcrypt.hash(plainPassword, 10);
+}
+
+// ADMIN SECTION
+
+export const handleAdminRegistration = async (req: Request, res: Response) => {
+  const { username, password, email } = req.body;
+
+  try {
+    const { error } = registrationSchema.validate({
+      username,
+      password,
+      email,
+    });
+
+    // if validation fails.
+    if (error) {
+      return res.json({ status: FAILED_STATUS, message: error.message });
+    }
+
+    // if everything is fine create new user and sign token
+    const newUser = await createAdmin({
+      username,
+      password: await hashPassword(password),
+      email,
+    });
+
+    // if user was created
+    if (newUser?.status === SUCCESS_STATUS && "adminId" in newUser) {
+      const token = jwt.sign({ sub: newUser.adminId }, ADMIN_SECRET_KEY!);
+      return res.status(201).json({
+        status: SUCCESS_STATUS,
+        message: "Registration successful",
+        id: newUser?.adminId,
+        token,
+      });
+    } else {
+      return res.status(201).json({
+        status: FAILED_STATUS,
+        message: newUser?.message,
+      });
+    }
+  } catch (err) {
+    const errorMessage = err instanceof Error && err.message;
+    return res.json({ status: FAILED_STATUS, message: errorMessage });
+  }
+};
+
+export const handleAdminLogin = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+
+    const { error } = loginSchema.validate({ username, password });
+
+    if (error) {
+      // if invalid result
+      return res.json({ status: FAILED_STATUS, message: error.message });
+    }
+
+    const result = await loginAdmin({
+      username,
+      password,
+    });
+
+    // if user was not found or incorrect password
+    if (result?.status === FAILED_STATUS) {
+      return res.json({ status: FAILED_STATUS, message: result?.message });
+    }
+
+    // if user was found and verified
+    if (result && "adminId" in result) {
+      const token = jwt.sign({ sub: result.adminId }, ADMIN_SECRET_KEY!);
+      return res.json({
+        status: SUCCESS_STATUS,
+        message: "Logged in successfully",
+        token,
+      });
+    }
+  } catch (err) {
+    console.error(`Error in Login: ${err instanceof Error && err.message}`);
+  }
+};
+
+const handleUpdateUsername = async (req: Request, res: Response) => {};
+
+const handleUpdatePassword = async (req: Request, res: Response) => {};
+
+const handleUpdateEmail = async (req: Request, res: Response) => {};
 
 /**
  * Adds a website to the database by the admin.
@@ -88,7 +189,7 @@ export const handleAddSupportedWebsite = async (
 };
 
 /**
- * KPIS Sections
+ * Dashboard Sections
  */
 
 export const handleDashboard = async (req: Request, res: Response) => {

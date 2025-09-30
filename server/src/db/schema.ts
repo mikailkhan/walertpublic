@@ -36,7 +36,7 @@ export const websiteTable = pgTable("websites", {
   scraperModule: text(),
 });
 
-export const admin = pgTable("admin", {
+export const adminTable = pgTable("admin", {
   adminId: integer()
     .primaryKey()
     .generatedAlwaysAsIdentity({ startWith: 1000 }),
