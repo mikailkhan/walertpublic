@@ -7,6 +7,29 @@ import { FAILED_STATUS, SUCCESS_STATUS } from "../configs/config";
 import bcrypt from "bcrypt";
 
 /**
+ * Does Admin Exists?
+ */
+export const isFirstAdmin = async (): Promise<boolean | undefined> => {
+  try {
+    const [admin] = await db.select({ count: count() }).from(adminTable);
+
+    if (admin.count === 0) {
+      // Admin exists;
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    ErrorLogger({
+      type: ERROR_TYPE.DATABASE,
+      error,
+      consoleLog: true,
+      customErrorMessage: "Error in creating admin",
+    });
+  }
+};
+
+/**
  * Create a new admin
  * @param param0
  * @returns
@@ -22,9 +45,7 @@ export const createAdmin = async ({
   email: string;
 }) => {
   try {
-    const [admin] = await db.select({ count: count() }).from(adminTable);
-
-    if (admin.count !== 0) {
+    if (!(await isFirstAdmin())) {
       return { status: FAILED_STATUS, message: "Admin already created." };
     }
 

@@ -3,6 +3,7 @@ import {
   addSupportedWebsite,
   createAdmin,
   getAllSupportedWebsites,
+  isFirstAdmin,
   loginAdmin,
 } from "../models/adminModel";
 import { domainExtract } from "../scraper/util/util";
@@ -54,6 +55,13 @@ export const handleAdminRegistration = async (req: Request, res: Response) => {
     // if validation fails.
     if (error) {
       return res.json({ status: FAILED_STATUS, message: error.message });
+    }
+
+    if (!(await isFirstAdmin())) {
+      return res.json({
+        status: FAILED_STATUS,
+        message: "Admin account already exists. New admin cannot be created.",
+      });
     }
 
     // if everything is fine create new user and sign token
