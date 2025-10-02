@@ -101,3 +101,66 @@ export const getAllMessages = async (isGetSent: boolean) => {
     return error instanceof AxiosError && error.message;
   }
 };
+
+// Auth
+
+export const adminExists = async (): Promise<boolean | null> => {
+  try {
+    const response = await api.get("/check-admin-exists");
+    console.log(response.data.adminExists);
+    return response.data.adminExists;
+  } catch (error) {
+    console.log(error instanceof AxiosError && error.message);
+    return null;
+  }
+};
+
+export const register = async ({
+  username,
+  password,
+  email,
+}: {
+  username: string;
+  password: string;
+  email: string;
+}) => {
+  try {
+    const response = await api.post("/register", {
+      username,
+      password,
+      email,
+    });
+
+    if ("data" in response) {
+      localStorage.setItem("walert_token", response.data.token);
+      return true;
+    }
+
+    return;
+  } catch (error) {
+    console.log(error instanceof AxiosError && error.message);
+  }
+};
+
+export const login = async ({
+  username,
+  password,
+}: {
+  username: string;
+  password: string;
+}) => {
+  try {
+    const response = await api.post("/login", {
+      username,
+      password,
+    });
+
+    if (response.data.token) {
+      localStorage.setItem("walert_token", response.data.token);
+    }
+
+    return response.data;
+  } catch (error) {
+    console.log(error instanceof AxiosError && error.message);
+  }
+};
