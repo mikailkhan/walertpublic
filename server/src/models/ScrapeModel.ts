@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm";
 import { db } from "../db/db";
 import {
+  cronLoggerTable,
   productsScrapeTable,
   productsTable,
   usersTable,
@@ -19,7 +20,6 @@ import { SCRAPE_STATUS, SCRAPE_STATUS_TYPE } from "../configs/scrapeConfig";
 
 export const getAllProductsOlderThan = async () => {
   try {
-    console.log(`✅ Scraping Job Started`);
     // const twentyFourHoursAgo = sql`NOW() - INTERVAL '24 hours'`;
     const twentyFourHoursAgo = sql`NOW() - INTERVAL '1 minutes'`;
 
@@ -146,5 +146,29 @@ export const getAllTrackers = async () => {
     return result;
   } catch (error) {
     return;
+  }
+};
+
+export const logCronJob = async ({
+  overallProductScrapeCount,
+  successfulProductScrapeCount,
+  failedProductScrapeCount,
+  duration,
+}: {
+  overallProductScrapeCount: number;
+  successfulProductScrapeCount: number;
+  failedProductScrapeCount: number;
+  duration: string;
+}) => {
+  try {
+    await db.insert(cronLoggerTable).values({
+      overallProductScrapeCount,
+      successfulProductScrapeCount,
+      failedProductScrapeCount,
+      duration,
+    });
+    return true;
+  } catch (error) {
+    return false;
   }
 };
