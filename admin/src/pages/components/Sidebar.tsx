@@ -155,14 +155,9 @@ const Sidebar = () => {
             height="32"
             className="rounded-circle me-2"
           />
-          <strong>mdo</strong>
+          <strong>Admin</strong>
         </NavLink>
         <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
-          <li>
-            <Link className="dropdown-item" to="#">
-              New project...
-            </Link>
-          </li>
           <li>
             <Link className="dropdown-item" to="#">
               Settings
@@ -177,7 +172,7 @@ const Sidebar = () => {
             <hr className="dropdown-divider" />
           </li>
           <li>
-            <Link className="dropdown-item" to="#">
+            <Link className="dropdown-item" to="/logout">
               Sign out
             </Link>
           </li>

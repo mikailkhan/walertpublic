@@ -1,19 +1,36 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
+import { checking, login, logout } from "../../redux/LoginSlice";
 import { isLoggedIn } from "../../services/auth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const Protected = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(Boolean);
+  const { value: userStatus, loading } = useSelector(
+    (state: RootState) => state.userLoginState
+  );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const loginStatus = async () => {
-      setIsAuthenticated(await isLoggedIn());
+    const checkStatus = async () => {
+      dispatch(checking());
+      const userLogged = await isLoggedIn();
+      if (userLogged) {
+        dispatch(login());
+      } else {
+        dispatch(logout());
+      }
     };
 
-    loginStatus();
-  }, [isAuthenticated]);
+    checkStatus();
+  }, [dispatch]);
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return userStatus ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default Protected;

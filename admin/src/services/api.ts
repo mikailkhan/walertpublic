@@ -136,13 +136,14 @@ export const register = async ({
       return true;
     }
 
-    return;
+    return false;
   } catch (error) {
     console.log(error instanceof AxiosError && error.message);
+    return false;
   }
 };
 
-export const login = async ({
+export const apiLogin = async ({
   username,
   password,
 }: {

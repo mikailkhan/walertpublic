@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { login } from "../../services/api";
+import { apiLogin } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/LoginSlice";
 
 const LoginComponent = () => {
   const [username, setUsername] = useState("");
@@ -8,13 +10,15 @@ const LoginComponent = () => {
   const [message, setMessage] = useState("");
   const [loginFailed, setLoginFailed] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const adminLogged = await login({ username, password });
+    const adminLogged = await apiLogin({ username, password });
 
     if (adminLogged.status === "successful") {
+      dispatch(login());
       navigate("/");
     } else {
       setLoginFailed(true);

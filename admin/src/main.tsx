@@ -16,10 +16,11 @@ import Websites from "./pages/admin/websites/Websites";
 import TrackersReq from "./pages/admin/messages/TrackersReq";
 import Add from "./pages/admin/websites/Add";
 import Protected from "./pages/layouts/Protected";
-import InverseProtected from "./pages/layouts/InverseProtected";
 
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
+import InverseProtected from "./pages/layouts/InverseProtected";
+import Logout from "./pages/Login/Logout";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         element: <Layout />,
         children: [
+          {
+            element: <Logout />,
+            path: `logout`,
+          },
           {
             element: <Dashboard />,
             index: true,
@@ -75,9 +80,9 @@ const router = createBrowserRouter([
 
   {
     element: (
-      // <InverseProtected>
-      <Login />
-      // </InverseProtected>
+      <InverseProtected>
+        <Login />
+      </InverseProtected>
     ),
     path: `login`,
   },
@@ -85,4 +90,8 @@ const router = createBrowserRouter([
 
 const root = createRoot(document.getElementById("root")!);
 
-root.render(<RouterProvider router={router} />);
+root.render(
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+);
