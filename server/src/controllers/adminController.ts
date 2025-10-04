@@ -42,6 +42,14 @@ async function hashPassword(plainPassword: string) {
 
 // ADMIN SECTION
 
+export const handleAdminExists = async (req: Request, res: Response) => {
+  if (await isFirstAdmin()) {
+    return res.json({ adminExists: false });
+  } else {
+    return res.json({ adminExists: true });
+  }
+};
+
 export const handleAdminRegistration = async (req: Request, res: Response) => {
   const { username, password, email } = req.body;
 
@@ -125,6 +133,13 @@ export const handleAdminLogin = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(`Error in Login: ${err instanceof Error && err.message}`);
   }
+};
+
+export const handleAdminAuthValidation = async (
+  req: Request,
+  res: Response
+) => {
+  return res.json({ loggedIn: true, user: req.user });
 };
 
 const handleUpdateUsername = async (req: Request, res: Response) => {};

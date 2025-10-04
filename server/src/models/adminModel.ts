@@ -7,14 +7,16 @@ import { FAILED_STATUS, SUCCESS_STATUS } from "../configs/config";
 import bcrypt from "bcrypt";
 
 /**
- * Does Admin Exists?
+ * Check if admin exists or not.
+ *
+ * @returns true if admin doesn't exists | false if admin exists
  */
 export const isFirstAdmin = async (): Promise<boolean | undefined> => {
   try {
     const [admin] = await db.select({ count: count() }).from(adminTable);
 
     if (admin.count === 0) {
-      // Admin exists;
+      // Admin doesn't exists;
       return true;
     } else {
       return false;

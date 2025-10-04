@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
   handleAddSupportedWebsite,
+  handleAdminAuthValidation,
+  handleAdminExists,
   handleAdminLogin,
   handleAdminRegistration,
   handleAllErrors,
@@ -18,8 +20,15 @@ const router = Router();
 
 router.post("/register", handleAdminRegistration);
 router.post("/login", handleAdminLogin);
+router.get("/check-admin-exists", handleAdminExists);
 
 // NEEDS AUTHENTICATION:
+
+router.get(
+  "/auth/validate",
+  passport.authenticate("jwt", { session: false }),
+  handleAdminAuthValidation
+);
 
 router.post(
   "/add-supported-website",
