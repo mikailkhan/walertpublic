@@ -6,6 +6,7 @@ import {
   timestamp,
   boolean,
 } from "drizzle-orm/pg-core";
+import { string } from "joi";
 
 export const usersTable = pgTable("users", {
   userId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
@@ -112,4 +113,13 @@ export const getMoreTrackerTable = pgTable("more_trackers_requests", {
     onDelete: "cascade",
   }),
   req: boolean().notNull(),
+});
+
+export const cronLoggerTable = pgTable("cron_job_logger", {
+  cronId: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
+  successfulProductScrapeCount: integer().notNull(),
+  failedProductScrapeCount: integer().notNull(),
+  overallProductScrapeCount: integer().notNull(),
+  startedAt: timestamp().defaultNow(),
+  duration: text(),
 });
