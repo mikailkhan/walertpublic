@@ -19,16 +19,25 @@ const Home = () => {
     setProductUrl(event.target.value);
     setisCorrectUrl(isURL(url));
   };
+
+  const handleButtonClick = () => {
+    // Replace 'https://www.example.com' with the desired URL
+    window.open(
+      `https://wa.me/15551578685?text=${productUrl}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
   return (
     <>
       <section id="main-header">
         <div className="container-fluid">
           <div className="row mb-5">
-            <h1 className="text-center display-3">Price Tracker</h1>
+            <h1 className="text-center display-3">WAlert</h1>
             <p className="lead text-center font-monospace">
-              Never miss a deal 🚀 Get instant product price updates sent
-              straight to your
-              <span className="text-success fw-bold"> WhatsApp</span>!
+              Get instant product price updates sent straight to your
+              <span className="text-success fw-bold"> WhatsApp</span>! 🚀
             </p>
           </div>
 
@@ -69,6 +78,7 @@ const Home = () => {
                   </div>
 
                   <button
+                    onClick={handleButtonClick}
                     className={`btn ${
                       isCorrectUrl ? `btn-success` : `btn-secondary bg-grey`
                     }`}
@@ -196,7 +206,7 @@ const Home = () => {
 
                 <div className="mt-6 flex justify-center">
                   <a
-                    href="https://wa.me/923352501007?text=https://hello.com"
+                    href="https://wa.me/15551578685"
                     className="inline-block rounded-2xl px-6 py-3 btn btn-primary text-white font-medium shadow"
                     target="_blank"
                   >

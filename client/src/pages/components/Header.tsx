@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import Logo from "../../assets/logo.svg";
 
 const Header = () => {
   return (
@@ -7,10 +8,16 @@ const Header = () => {
         to="/"
         className="d-flex align-items-center mb-3 mb-md-0 me-auto text-primary text-decoration-none"
       >
-        <svg className="bi me-2" width="40" height="32" aria-hidden="true">
-          {/* <use xlink:to="#bootstrap"></use> */}
-        </svg>
-        <span className="fs-4 primary">Walert</span>
+        <img
+          src={Logo}
+          alt="walert"
+          className="bi ms-2"
+          width="40"
+          height="32"
+          aria-hidden="true"
+        />
+
+        <span className="fs-4 primary">alert</span>
       </NavLink>
       <ul className="nav nav-pills">
         <li className="nav-item">
