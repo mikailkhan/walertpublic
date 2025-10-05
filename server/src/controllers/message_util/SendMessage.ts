@@ -36,12 +36,6 @@ export const sendTemplateMessage = async ({
   // data
   languageCode ? languageCode : "en";
   username ? username : ``;
-  // const reciever = "923362601112";
-  // const templateName = "drop_alert";
-  // const languageCode = "en";
-  // const username = "John";
-  // const productTitle = "Navy Basic Short MN-SHT-SS23-003 A";
-  // const productID = "123";
 
   try {
     const response = await axios({

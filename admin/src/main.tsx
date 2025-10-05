@@ -1,10 +1,14 @@
+// React
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./pages/layouts/Layout";
 import { createRoot } from "react-dom/client";
+
+// Style
 import "./scss/style.scss";
 import "./style/index.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+// Components
+import Layout from "./pages/layouts/Layout";
 import Dashboard from "./pages/admin/dashboard/Dashboard";
 import Login from "./pages/Login/Login";
 import Sent from "./pages/admin/messages/Sent";
@@ -15,12 +19,13 @@ import Errors from "./pages/admin/errors/Errors";
 import Websites from "./pages/admin/websites/Websites";
 import TrackersReq from "./pages/admin/messages/TrackersReq";
 import Add from "./pages/admin/websites/Add";
+import Logout from "./pages/Login/Logout";
 import Protected from "./pages/layouts/Protected";
+import InverseProtected from "./pages/layouts/InverseProtected";
 
+// REDUX
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
-import InverseProtected from "./pages/layouts/InverseProtected";
-import Logout from "./pages/Login/Logout";
 
 const router = createBrowserRouter([
   {

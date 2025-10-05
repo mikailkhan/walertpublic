@@ -88,6 +88,10 @@ export const getAllTrackersReq = async () => {
 export const getAllMessages = async (isGetSent: boolean) => {
   try {
     let response;
+
+    // If `getSent` is true, the function retrieves sent messages instead of received ones.
+    // Used in the admin panel to toggle between viewing sent and received messages.
+
     if (isGetSent) {
       response = await api.get("/messages-sent");
     } else {
@@ -107,7 +111,7 @@ export const getAllMessages = async (isGetSent: boolean) => {
 export const adminExists = async (): Promise<boolean | null> => {
   try {
     const response = await api.get("/check-admin-exists");
-    console.log(response.data.adminExists);
+    // enforces only one admin exists in database
     return response.data.adminExists;
   } catch (error) {
     console.log(error instanceof AxiosError && error.message);

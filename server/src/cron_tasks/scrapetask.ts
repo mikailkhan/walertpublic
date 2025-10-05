@@ -11,20 +11,40 @@ import { ErrorLogger } from "../util/ErrorLogger";
 import { ERROR_TYPE } from "../configs/errorConfig";
 import { sendTemplateMessage } from "../controllers/message_util/SendMessage";
 
+/**
+ * Periodically executes the product scraping task.
+ *
+ * This scheduled task performs the following operations:
+ * - Runs automatically at a fixed interval (e.g., every 10 minutes; every 5 seconds in development).
+ * - Selects all products that were last updated more than 24 hours ago.
+ * - Initiates the scraper to fetch the current product prices.
+ * - Updates the database with the latest price and timestamp.
+ * - If the new price is lower than the previous one, sends a notification message to the user.
+ * - Ensures that only one cron job runs at a time to prevent overlap.
+ *
+ * @async
+ * @returns {Promise<void>} A promise that resolves when the scraping cycle completes.
+ */
+
 let isRunning: boolean = false;
-
 const scrapeTask = async () => {
-  // ✅ Run every 10 minutes (for dev every 5 seconds)
-  // ✅ select products older than 24hr
-  // ✅ start scraper
-  // ✅ add current price to database
-  // ✅ add current timestamp to database
-  // if price < then send msg to user.
-  // ✅ move to next
-  //
-  // wait at least 30 seconds before starting another scrape
-  // check if cron already is running then don't start another cron.
+  // ✅ Scheduled task execution interval:
+  //    - Production: every 12 hours
+  //    - Development: every 5 seconds
 
+  // ✅ Step 1: Select products that haven’t been updated in the last 24 hours.
+
+  // ✅ Step 2: Start the scraper and fetch updated product data.
+
+  // ✅ Step 3: Store the new price and timestamp in the database.
+
+  // ✅ Step 4: If the current price is lower than before, send a notification to the user.
+
+  // ✅ Step 5: Wait at least 30 seconds before initiating another scraping cycle.
+
+  // ✅ Step 6: Ensure no concurrent cron jobs are running (prevent duplicate execution).
+
+  // Example debug line:
   // console.log(await getAllProductsOlderThan());
 
   if (isRunning) {
@@ -44,7 +64,7 @@ const scrapeTask = async () => {
     try {
       overallProductScrapeCount++;
       if (previousWebsite === val.websites.website) {
-        await sleep(20); // 5 secs
+        await sleep(20); // 60 in production
         previousWebsite = val.websites.website;
       } else {
         previousWebsite = val.websites.website;
@@ -121,7 +141,7 @@ const scrapeTask = async () => {
     duration,
   });
 
-  console.log(`👍 [${new Date().toString()}] Scraping Job ended`);
+  console.log(`👍 Scraping Job ended in ${duration}`);
   isRunning = false;
 };
 

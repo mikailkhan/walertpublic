@@ -8,6 +8,9 @@ const Login = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      // If the response is false, it indicates that no admin account currently exists in the database.
+      // This logic enforces a single-admin policy, ensuring that only one admin can ever register.
+
       const response = await adminExists();
       if (response === false) {
         setNewAdmin(true);

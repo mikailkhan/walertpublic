@@ -7,7 +7,6 @@ import { handleTextMessage } from "./message_util/HandleText";
 /**
  * This function varifies if we got the hook verified before starting recieving messages.
  *
- *
  * @param req - Request by express
  * @param res - Response by express
  */
@@ -54,6 +53,8 @@ export const recieveMessage = async (req: Request, res: Response) => {
   const name: string = changes[0].value.contacts
     ? changes[0].value.contacts[0].profile.name
     : null;
+
+  // Uncomment the following lines to retrieve or enable the chatbot number. 👇
 
   // const chatbotNumber: string = changes[0].value.metadata.display_phone_number
   //   ? changes[0].value.metadata.display_phone_number

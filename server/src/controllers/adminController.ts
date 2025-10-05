@@ -41,7 +41,6 @@ async function hashPassword(plainPassword: string) {
 }
 
 // ADMIN SECTION
-
 export const handleAdminExists = async (req: Request, res: Response) => {
   if (await isFirstAdmin()) {
     return res.json({ adminExists: false });
@@ -65,6 +64,7 @@ export const handleAdminRegistration = async (req: Request, res: Response) => {
       return res.json({ status: FAILED_STATUS, message: error.message });
     }
 
+    // Only one admin can exists in the database for security purpose
     if (!(await isFirstAdmin())) {
       return res.json({
         status: FAILED_STATUS,
