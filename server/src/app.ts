@@ -8,6 +8,7 @@ import scrapeTask from "./cron_tasks/scrapetask";
 import { ADMIN_URL } from "./configs/config";
 import { strategy } from "./middleware/Auth";
 import passport from "passport";
+import productRouter from "./routes/product";
 
 export const createApp = () => {
   const app = express();
@@ -40,8 +41,16 @@ export const createApp = () => {
     adminRouter
   );
 
+  app.use(
+    `/api/v1/product`,
+    (req: Request, res: Response, next) => {
+      next();
+    },
+    productRouter
+  );
+
   // cron jobs
-  cron.schedule("*/5 * * * * *", scrapeTask);
+  // cron.schedule("*/5 * * * * *", scrapeTask);
 
   return app;
 };

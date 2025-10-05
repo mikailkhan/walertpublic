@@ -5,6 +5,7 @@ import "./scss/style.scss";
 import "./style/index.css";
 import Home from "./pages/Home";
 import About from "./pages/general/about";
+import Product from "./pages/Product";
 
 const router = createBrowserRouter([
   {
@@ -13,11 +14,15 @@ const router = createBrowserRouter([
     children: [
       {
         element: <Home />,
-        path: "/",
+        index: true,
+      },
+      {
+        element: <Product />,
+        path: "product/:productId",
       },
       {
         element: <About />,
-        path: "/about",
+        path: "about",
       },
     ],
   },
