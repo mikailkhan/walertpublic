@@ -13,6 +13,8 @@ import { FaDownLong } from "react-icons/fa6";
 const Home = () => {
   const [productUrl, setProductUrl] = useState("");
   const [isCorrectUrl, setisCorrectUrl] = useState(false);
+  const numberForURL = "15551578685";
+  const numberForFront = "+92 335 2501007";
 
   const handleProductUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
     const url = event.target.value;
@@ -23,7 +25,7 @@ const Home = () => {
   const handleButtonClick = () => {
     // Replace 'https://www.example.com' with the desired URL
     window.open(
-      `https://wa.me/15551578685?text=${productUrl}`,
+      `https://wa.me/${numberForURL}?text=${productUrl}`,
       "_blank",
       "noopener,noreferrer"
     );
@@ -96,7 +98,7 @@ const Home = () => {
           <div className="row my-5">
             <h2 className="display-6 text-muted text-center">OR</h2>
             <small className="text-muted text-center">
-              Just send us the product link on WhatsApp (+92 335 2501007) and
+              Just send us the product link on WhatsApp ({numberForFront}) and
               we'll start tracking it for you! ⚡
             </small>
           </div>
@@ -206,7 +208,7 @@ const Home = () => {
 
                 <div className="mt-6 flex justify-center">
                   <a
-                    href="https://wa.me/15551578685"
+                    href={`https://wa.me/${numberForURL}`}
                     className="inline-block rounded-2xl px-6 py-3 btn btn-primary text-white font-medium shadow"
                     target="_blank"
                   >
@@ -215,7 +217,7 @@ const Home = () => {
                 </div>
 
                 <p className="mt-4 text-sm text-gray-600">
-                  Phone: +92 335 2501007
+                  Phone: {numberForFront}
                 </p>
               </div>
             </div>
