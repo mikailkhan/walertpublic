@@ -46,8 +46,8 @@ const Home = () => {
           <div className="row">
             <div className="col-md-4 mx-auto">
               <img
-                src="/home.jpg"
-                alt="random"
+                src="/home.png"
+                alt="walert"
                 className="rounded shadow-lg img-fluid d-block"
               />
             </div>
