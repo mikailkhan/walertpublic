@@ -64,7 +64,7 @@ const scrapeTask = async () => {
     try {
       overallProductScrapeCount++;
       if (previousWebsite === val.websites.website) {
-        await sleep(20); // 60 in production
+        await sleep(60); // 60 in production
         previousWebsite = val.websites.website;
       } else {
         previousWebsite = val.websites.website;
@@ -108,6 +108,7 @@ const scrapeTask = async () => {
             username: val.users.fullName,
             productTitle: val.products.productName,
             productID: val.products.productId.toString(),
+            // productID: 1234,
             website: val.websites.website,
           });
         }

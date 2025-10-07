@@ -51,6 +51,8 @@ export const createApp = () => {
 
   // cron jobs
   // cron.schedule("*/5 * * * * *", scrapeTask);
+  // At every minute past every 12th hour.
+  cron.schedule("* */12 * * *", scrapeTask);
 
   return app;
 };

@@ -21,7 +21,7 @@ import { SCRAPE_STATUS, SCRAPE_STATUS_TYPE } from "../configs/scrapeConfig";
 export const getAllProductsOlderThan = async () => {
   try {
     // const twentyFourHoursAgo = sql`NOW() - INTERVAL '24 hours'`;
-    const twentyFourHoursAgo = sql`NOW() - INTERVAL '1 minutes'`;
+    const twentyFourHoursAgo = sql`NOW() - INTERVAL '24 hours'`;
 
     // get details of product such as (User, Website, Product, and ScrapeProduct) that
     // are not scraped in last 24 hours.
