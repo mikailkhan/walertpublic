@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoOpen } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import { getProductDetails } from "../api/Api";
