@@ -99,7 +99,7 @@ const scrapeTask = async () => {
           SCRAPE_STATUS.SUCCESS
         );
 
-        if (scrapedResult.price === val.products.originalPrice) {
+        if (scrapedResult.price < val.products.originalPrice) {
           // notify user of price drop
 
           await sendTemplateMessage({
@@ -108,7 +108,6 @@ const scrapeTask = async () => {
             username: val.users.fullName,
             productTitle: val.products.productName,
             productID: val.products.productId.toString(),
-            // productID: 1234,
             website: val.websites.website,
           });
         }
