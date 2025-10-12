@@ -11,14 +11,34 @@ export const startPuppeteerScraper = async (
 ): Promise<ScrapeResult> => {
   const module = "PuppeteerScraper";
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true, // run in headless mode (no GUI)
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--no-zygote",
+        "--single-process",
+      ],
+    });
     const page = await browser.newPage();
-    await page.goto(url);
 
-    const rawPrice = await page.$eval(priceSelector, (val) => val.textContent);
-    const name = await page.$eval(
-      productNameSelector,
-      (val) => val.textContent
+    // Optional: Set a user agent to avoid bot detection
+    await page.setUserAgent(
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36"
+    );
+
+    await page.goto(url, {
+      waitUntil: "domcontentloaded",
+      timeout: 60000, // 60 seconds
+    });
+
+    const rawPrice = await page.$eval(priceSelector, (val) =>
+      val.textContent.trim()
+    );
+    const name = await page.$eval(productNameSelector, (val) =>
+      val.textContent.trim()
     );
 
     await browser.close();
