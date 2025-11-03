@@ -134,4 +134,4 @@ This project is licensed under the MIT License — see the LICENSE file for deta
 
 ## Acknowledgements
 
-- Only for eductional and personal use purposes!
+- Only for educational and personal use purposes!
