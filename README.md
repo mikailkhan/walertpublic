@@ -31,9 +31,10 @@ Get price drop alerts on your whatsapp for any ecommerce website.
   ![alt text](3.tracker-placed.jpg)
 - Example of price drop alert after price goes down
   ![alt text](5.alert-after-price-drop.jpg)
-- Menu
+- Menu Command
   ![alt text](6.menu.jpg)
-  ![alt text](<6.1 menu.jpg>)
+- Menu
+  ![alt text](<6.1 menu-1.jpg>)
 
 ## Features
 
