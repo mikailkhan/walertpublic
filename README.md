@@ -34,7 +34,7 @@ Get price drop alerts on your whatsapp for any ecommerce website.
 - Menu Command
   ![alt text](6.menu.jpg)
 - Menu
-  ![alt text](6.1 menu-1.jpg)
+  ![alt text](<6.1 menu-1.jpg>)
 
 ## Features
 
