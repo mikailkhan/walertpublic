@@ -34,7 +34,7 @@ Get price drop alerts on your whatsapp for any ecommerce website.
 - Menu Command
   ![alt text](6.menu.jpg)
 - Menu
-  ![alt text](<6.1 menu-1.jpg>)
+  ![alt text](6.1 menu-1.jpg)
 
 ## Features
 
@@ -45,8 +45,6 @@ Get price drop alerts on your whatsapp for any ecommerce website.
 - Authentication
 
 ## Tech stack
-
-List the primary technologies used. Replace with actual stack.
 
 - Language: Javascript (TypeScript) / Node.js
 - Web framework: Express.js
@@ -96,8 +94,6 @@ npm run dev
 - API: http://localhost:8000 (replace as appropriate)
 
 ## Configuration
-
-Document important environment variables and configuration options in .env.example. Typical variables:
 
 - SERVER_PORT =
 - HOST =
