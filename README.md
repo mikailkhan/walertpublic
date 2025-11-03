@@ -40,9 +40,9 @@ Get price drop alerts on your whatsapp for any ecommerce website.
 
 - Alert creation, and delivery
 - Channel: Whatsapp
-- Web UI for managing alerts (if applicable)
+- Web UI
 - Lightweight API for integrations
-- Authentication and role-based access (if applicable)
+- Authentication
 
 ## Tech stack
 
