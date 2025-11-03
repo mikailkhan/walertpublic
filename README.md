@@ -127,9 +127,9 @@ This project is licensed under the MIT License — see the LICENSE file for deta
 
 ## Contact
 
-Maintainer: Mikail Khan
-Connect: https://www.linkedin.com/in/mikailkhan1/
-Repository: https://github.com/mikailkhan/walertpublic
+> Maintainer: Mikail Khan
+> Connect: https://www.linkedin.com/in/mikailkhan1/
+> Repository: https://github.com/mikailkhan/walertpublic
 
 ## Acknowledgements
 
