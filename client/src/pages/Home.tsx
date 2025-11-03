@@ -14,7 +14,7 @@ const Home = () => {
   const [productUrl, setProductUrl] = useState("");
   const [isCorrectUrl, setisCorrectUrl] = useState(false);
   const numberForURL = "15551578685";
-  const numberForFront = "+92 335 2501007";
+  const numberForFront = "+15551578685";
 
   const handleProductUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
     const url = event.target.value;
